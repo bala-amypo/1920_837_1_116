@@ -12,4 +12,7 @@ public class ServiceImpl {
 
     public void validateExists(Object entity) {
         if (entity == null) {
-            throw new ResourceNotFoundException("Resour
+            throw new ResourceNotFoundException("Resource not found");
+        }
+    }
+}
