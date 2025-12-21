@@ -1,3 +1,3 @@
-public interface BreachRuleRepository extends JpaRepository<BreachRule, Long> {
-    Optional<BreachRule> findFirstByActiveTrueOrderByIsDefaultRuleDesc();
+public interface BreachReportRepository extends JpaRepository<BreachReport, Long> {
+    List<BreachReport> findByContractId(Long contractId);
 }
