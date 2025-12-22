@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = "contractNumber"))
 public class Contract {
 
     @Id
@@ -13,20 +12,25 @@ public class Contract {
     private Long id;
 
     private String contractNumber;
-    private String title;
-    private String counterpartyName;
 
     @Temporal(TemporalType.DATE)
     private Date agreedDeliveryDate;
 
     private BigDecimal baseContractValue;
-    private String status;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdAt = new Date();
+    public Long getId() {
+        return id;
+    }
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date updatedAt = new Date();
+    public String getContractNumber() {
+        return contractNumber;
+    }
 
-    // getters & setters
+    public Date getAgreedDeliveryDate() {
+        return agreedDeliveryDate;
+    }
+
+    public BigDecimal getBaseContractValue() {
+        return baseContractValue;
+    }
 }

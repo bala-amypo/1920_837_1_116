@@ -1,48 +1,13 @@
-package com.example.demo.entity;
+package com.example.demo.repository;
 
-import jakarta.persistence.*;
+import com.example.demo.entity.VendorTier;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-@Entity
-public class VendorTier {
+import java.util.List;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public interface VendorTierRepository extends JpaRepository<VendorTier, Long> {
 
-    @Column(unique = true)
-    private String tierName;
+    List<VendorTier> findByActiveTrueOrderByMinScoreThresholdDesc();
 
-    private Integer minScoreThreshold;
-
-    private Boolean active;
-
-    // ===== GETTERS & SETTERS =====
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getTierName() {
-        return tierName;
-    }
-
-    public void setTierName(String tierName) {
-        this.tierName = tierName;
-    }
-
-    public Integer getMinScoreThreshold() {
-        return minScoreThreshold;
-    }
-
-    public void setMinScoreThreshold(Integer minScoreThreshold) {
-        this.minScoreThreshold = minScoreThreshold;
-    }
-
-    public Boolean getActive() {
-        return active;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
+    boolean existsByTierName(String name);
 }

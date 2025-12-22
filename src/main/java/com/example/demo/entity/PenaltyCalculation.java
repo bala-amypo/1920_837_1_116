@@ -2,7 +2,6 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
-import java.util.Date;
 
 @Entity
 public class PenaltyCalculation {
@@ -20,8 +19,19 @@ public class PenaltyCalculation {
     @ManyToOne
     private BreachRule appliedRule;
 
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date calculatedAt = new Date();
+    public void setContract(Contract contract) {
+        this.contract = contract;
+    }
 
-    // getters & setters
+    public void setDaysDelayed(Integer daysDelayed) {
+        this.daysDelayed = daysDelayed;
+    }
+
+    public void setCalculatedPenalty(BigDecimal calculatedPenalty) {
+        this.calculatedPenalty = calculatedPenalty;
+    }
+
+    public void setAppliedRule(BreachRule appliedRule) {
+        this.appliedRule = appliedRule;
+    }
 }

@@ -16,10 +16,7 @@ public class DeliveryRecord {
     @Temporal(TemporalType.DATE)
     private Date deliveryDate;
 
-    private String notes;
-
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createdAt = new Date();
-
-    // getters & setters
+    public Date getDeliveryDate() {
+        return deliveryDate;
+    }
 }
