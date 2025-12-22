@@ -1,50 +1,51 @@
-package com.example.demo.service;
+package com.example.demo.service.impl;
 
 import com.example.demo.entity.*;
-import com.example.demo.exception.*;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.*;
+import com.example.demo.service.BreachRuleService;
 
 import java.math.BigDecimal;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
 
 public class PenaltyCalculationServiceImpl {
 
-    private final ContractRepository contractRepo;
-    private final DeliveryRecordRepository deliveryRepo;
+    private final ContractRepository contractRepository;
+    private final DeliveryRecordRepository deliveryRepository;
     private final BreachRuleService breachRuleService;
-    private final PenaltyCalculationRepository penaltyRepo;
+    private final PenaltyCalculationRepository penaltyRepository;
 
     public PenaltyCalculationServiceImpl(
-            ContractRepository contractRepo,
-            DeliveryRecordRepository deliveryRepo,
+            ContractRepository contractRepository,
+            DeliveryRecordRepository deliveryRepository,
             BreachRuleService breachRuleService,
-            PenaltyCalculationRepository penaltyRepo) {
+            PenaltyCalculationRepository penaltyRepository) {
 
-        this.contractRepo = contractRepo;
-        this.deliveryRepo = deliveryRepo;
+        this.contractRepository = contractRepository;
+        this.deliveryRepository = deliveryRepository;
         this.breachRuleService = breachRuleService;
-        this.penaltyRepo = penaltyRepo;
+        this.penaltyRepository = penaltyRepository;
     }
 
     public PenaltyCalculation calculate(String contractNumber) {
 
-        Contract contract = contractRepo.findByContractNumber(contractNumber)
+        Contract contract = contractRepository
+                .findByContractNumber(contractNumber)
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Contract not found"));
 
-        DeliveryRecord delivery = deliveryRepo
+        DeliveryRecord delivery = deliveryRepository
                 .findFirstByContractIdOrderByDeliveryDateDesc(contract.getId())
                 .orElseThrow(() ->
                         new ResourceNotFoundException("No delivery record"));
 
         BreachRule rule = breachRuleService.getActiveDefaultOrFirst();
 
-        long daysDelayed = ChronoUnit.DAYS.between(
+        long days = ChronoUnit.DAYS.between(
                 contract.getAgreedDeliveryDate().toInstant(),
                 delivery.getDeliveryDate().toInstant());
 
-        int delay = (int) Math.max(daysDelayed, 0);
+        int delay = (int) Math.max(days, 0);
 
         BigDecimal penaltyByDays =
                 rule.getPenaltyPerDay().multiply(BigDecimal.valueOf(delay));
@@ -61,6 +62,6 @@ public class PenaltyCalculationServiceImpl {
         calc.setCalculatedPenalty(finalPenalty);
         calc.setAppliedRule(rule);
 
-        return penaltyRepo.save(calc);
+        return penaltyRepository.save(calc);
     }
 }
