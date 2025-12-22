@@ -1,3 +1,5 @@
+package com.example.demo.entity;
+
 @Entity
 @Table(name = "contracts", uniqueConstraints = @UniqueConstraint(columnNames = "contractNumber"))
 public class Contract {

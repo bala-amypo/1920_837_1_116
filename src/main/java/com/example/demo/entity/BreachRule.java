@@ -1,3 +1,5 @@
+package com.example.demo.entity;
+
 @Entity
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = "ruleName"))
 public class BreachRule {
