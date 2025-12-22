@@ -1,3 +1,17 @@
+package com.example.demo.service;
+
+import com.example.demo.entity.*;
+import com.example.demo.exception.BadRequestException;
+import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.repository.ContractRepository;
+import com.example.demo.repository.DeliveryRecordRepository;
+import com.example.demo.repository.PenaltyCalculationRepository;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+import java.time.temporal.ChronoUnit;
+
 @Service
 public class PenaltyCalculationService {
 
@@ -22,13 +36,13 @@ public class PenaltyCalculationService {
 
         Contract contract = contractRepository
                 .findByContractNumber(contractNumber)
-                .orElseThrow(() -> 
-                    new ResourceNotFoundException("Contract not found"));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("Contract not found"));
 
         DeliveryRecord delivery = deliveryRecordRepository
                 .findFirstByContractIdOrderByDeliveryDateDesc(contract.getId())
-                .orElseThrow(() -> 
-                    new BadRequestException("No delivery record"));
+                .orElseThrow(() ->
+                        new BadRequestException("No delivery record"));
 
         long delayDays = ChronoUnit.DAYS.between(
                 contract.getAgreedDeliveryDate().toInstant(),
@@ -43,7 +57,8 @@ public class PenaltyCalculationService {
 
         BigDecimal maxPenalty =
                 contract.getBaseContractValue()
-                        .multiply(BigDecimal.valueOf(rule.getMaxPenaltyPercentage() / 100));
+                        .multiply(BigDecimal.valueOf(
+                                rule.getMaxPenaltyPercentage() / 100));
 
         BigDecimal finalPenalty = perDayPenalty.min(maxPenalty);
 

@@ -1,4 +1,4 @@
-   package com.example.demo.service;
+package com.example.demo.service;
 
 import com.example.demo.dto.DeliveryRecordDto;
 import com.example.demo.entity.Contract;
