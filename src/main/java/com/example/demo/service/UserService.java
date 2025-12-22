@@ -1,7 +1,6 @@
 package com.example.demo.service.user;
 
 import com.example.demo.entity.User;
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -14,13 +13,17 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User getUserByEmail(String email) {
-        return userRepository.findByEmail(email)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("User not found"));
+    public User saveUser(User user) {
+        return userRepository.save(user);
     }
 
     public User getUserById(Long id) {
-        return userRepository.findById(id);
-}
+        return userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
+
+    public User getUserByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+    }
 }
