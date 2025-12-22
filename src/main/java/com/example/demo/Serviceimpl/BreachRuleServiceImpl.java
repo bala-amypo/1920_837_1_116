@@ -1,12 +1,9 @@
-package com.example.demo.service.impl;
+package com.example.demo.service;
 
-import org.springframework.stereotype.Service;
-import com.example.demo.service.BreachRuleService;
-import com.example.demo.repository.BreachRuleRepository;
 import com.example.demo.entity.BreachRule;
 import com.example.demo.exception.ResourceNotFoundException;
+import com.example.demo.repository.BreachRuleRepository;
 
-@Service
 public class BreachRuleServiceImpl implements BreachRuleService {
 
     private final BreachRuleRepository repo;
@@ -15,8 +12,10 @@ public class BreachRuleServiceImpl implements BreachRuleService {
         this.repo = repo;
     }
 
+    @Override
     public BreachRule getActiveDefaultOrFirst() {
         return repo.findFirstByActiveTrueOrderByIsDefaultRuleDesc()
-                .orElseThrow(() -> new ResourceNotFoundException("No active breach rule"));
+                .orElseThrow(() ->
+                        new ResourceNotFoundException("No active breach rule"));
     }
 }
