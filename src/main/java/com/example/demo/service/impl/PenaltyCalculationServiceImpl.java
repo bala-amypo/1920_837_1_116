@@ -1,66 +1,87 @@
-package com.example.demo.service;
+package com.example.demo.service.impl;
 
 import com.example.demo.entity.*;
-import com.example.demo.exception.*;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.*;
+import com.example.demo.service.PenaltyCalculationService;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.Date;
+import java.util.List;
 
-public class PenaltyCalculationServiceImpl {
+@Service
+public class PenaltyCalculationServiceImpl implements PenaltyCalculationService {
 
+    private final PenaltyCalculationRepository calculationRepo;
     private final ContractRepository contractRepo;
     private final DeliveryRecordRepository deliveryRepo;
-    private final BreachRuleService breachRuleService;
-    private final PenaltyCalculationRepository penaltyRepo;
+    private final BreachRuleRepository ruleRepo;
 
     public PenaltyCalculationServiceImpl(
+            PenaltyCalculationRepository calculationRepo,
             ContractRepository contractRepo,
             DeliveryRecordRepository deliveryRepo,
-            BreachRuleService breachRuleService,
-            PenaltyCalculationRepository penaltyRepo) {
+            BreachRuleRepository ruleRepo) {
 
+        this.calculationRepo = calculationRepo;
         this.contractRepo = contractRepo;
         this.deliveryRepo = deliveryRepo;
-        this.breachRuleService = breachRuleService;
-        this.penaltyRepo = penaltyRepo;
+        this.ruleRepo = ruleRepo;
     }
 
-    public PenaltyCalculation calculate(String contractNumber) {
+    @Override
+    public PenaltyCalculation calculatePenalty(Long contractId) {
 
-        Contract contract = contractRepo.findByContractNumber(contractNumber)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Contract not found"));
+        Contract contract = contractRepo.findById(contractId)
+                .orElseThrow(() -> new ResourceNotFoundException("Contract not found"));
 
         DeliveryRecord delivery = deliveryRepo
-                .findFirstByContractIdOrderByDeliveryDateDesc(contract.getId())
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("No delivery record"));
+                .findFirstByContractIdOrderByDeliveryDateDesc(contractId)
+                .orElseThrow(() -> new ResourceNotFoundException("Delivery record not found"));
 
-        BreachRule rule = breachRuleService.getActiveDefaultOrFirst();
+        BreachRule rule = ruleRepo
+                .findFirstByActiveTrueOrderByIsDefaultRuleDesc()
+                .orElseThrow(() -> new ResourceNotFoundException("No active rule found"));
 
-        long daysDelayed = ChronoUnit.DAYS.between(
-                contract.getAgreedDeliveryDate().toInstant(),
-                delivery.getDeliveryDate().toInstant());
+        LocalDate agreedDate = contract.getAgreedDeliveryDate();
+        LocalDate actualDate = delivery.getDeliveryDate();
 
-        int delay = (int) Math.max(daysDelayed, 0);
+        long daysDelayed = ChronoUnit.DAYS.between(agreedDate, actualDate);
+        if (daysDelayed < 0) {
+            daysDelayed = 0;
+        }
 
-        BigDecimal penaltyByDays =
-                rule.getPenaltyPerDay().multiply(BigDecimal.valueOf(delay));
+        BigDecimal penalty =
+                rule.getPenaltyPerDay().multiply(BigDecimal.valueOf(daysDelayed));
 
-        BigDecimal maxPenalty =
+        BigDecimal maxAllowed =
                 contract.getBaseContractValue()
                         .multiply(BigDecimal.valueOf(rule.getMaxPenaltyPercentage() / 100));
 
-        BigDecimal finalPenalty = penaltyByDays.min(maxPenalty);
+        if (penalty.compareTo(maxAllowed) > 0) {
+            penalty = maxAllowed;
+        }
 
         PenaltyCalculation calc = new PenaltyCalculation();
         calc.setContract(contract);
-        calc.setDaysDelayed(delay);
-        calc.setCalculatedPenalty(finalPenalty);
-        calc.setAppliedRule(rule);
+        calc.setDeliveryRecord(delivery);
+        calc.setBreachRule(rule);              // ✅ FIXED
+        calc.setDaysDelayed((int) daysDelayed);
+        calc.setCalculatedPenalty(penalty);
 
-        return penaltyRepo.save(calc);
+        return calculationRepo.save(calc);
+    }
+
+    @Override
+    public PenaltyCalculation getCalculationById(Long id) {
+        return calculationRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Calculation not found"));
+    }
+
+    @Override
+    public List<PenaltyCalculation> getCalculationsForContract(Long contractId) {
+        return calculationRepo.findByContractId(contractId);
     }
 }
