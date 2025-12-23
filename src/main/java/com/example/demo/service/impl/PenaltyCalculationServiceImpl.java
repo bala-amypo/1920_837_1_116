@@ -56,18 +56,18 @@ public class PenaltyCalculationServiceImpl implements PenaltyCalculationService 
         BigDecimal penalty =
                 rule.getPenaltyPerDay().multiply(BigDecimal.valueOf(daysDelayed));
 
-        BigDecimal maxAllowed =
+        BigDecimal maxPenalty =
                 contract.getBaseContractValue()
                         .multiply(BigDecimal.valueOf(rule.getMaxPenaltyPercentage() / 100));
 
-        if (penalty.compareTo(maxAllowed) > 0) {
-            penalty = maxAllowed;
+        if (penalty.compareTo(maxPenalty) > 0) {
+            penalty = maxPenalty;
         }
 
         PenaltyCalculation calc = new PenaltyCalculation();
         calc.setContract(contract);
         calc.setDeliveryRecord(delivery);
-        calc.setBreachRule(rule);              // ✅ FIXED
+        calc.setBreachRule(rule);
         calc.setDaysDelayed((int) daysDelayed);
         calc.setCalculatedPenalty(penalty);
 
