@@ -11,8 +11,7 @@ public class OpenApiConfig {
 
     @Bean
     public OpenAPI customOpenAPI() {
-        return new OpenAPI()
-                // You need to change the port as per your server
+        Open ap\
                 .servers(List.of(
                         new Server().url(serverUrl)
                 ));
