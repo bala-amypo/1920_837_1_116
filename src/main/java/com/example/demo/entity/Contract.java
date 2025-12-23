@@ -2,7 +2,7 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 public class Contract {
@@ -11,26 +11,37 @@ public class Contract {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true, nullable = false)
     private String contractNumber;
 
-    @Temporal(TemporalType.DATE)
-    private Date agreedDeliveryDate;
+    private String title;
+    private String counterpartyName;
+
+    // 🔴 MUST BE LocalDate (NOT Date)
+    private LocalDate agreedDeliveryDate;
 
     private BigDecimal baseContractValue;
 
-    public Long getId() {
-        return id;
-    }
+    private String status = "ACTIVE";
 
-    public String getContractNumber() {
-        return contractNumber;
-    }
+    public Contract() {}
 
-    public Date getAgreedDeliveryDate() {
+    // ===== GETTERS & SETTERS =====
+    public LocalDate getAgreedDeliveryDate() {
         return agreedDeliveryDate;
+    }
+
+    public void setAgreedDeliveryDate(LocalDate agreedDeliveryDate) {
+        this.agreedDeliveryDate = agreedDeliveryDate;
     }
 
     public BigDecimal getBaseContractValue() {
         return baseContractValue;
     }
+
+    public void setBaseContractValue(BigDecimal baseContractValue) {
+        this.baseContractValue = baseContractValue;
+    }
+
+    // other getters/setters
 }
