@@ -48,4 +48,3 @@ public class AuthResponseDto {
         this.role = role;
     }
 }
-    
