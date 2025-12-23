@@ -2,6 +2,7 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 public class PenaltyCalculation {
@@ -13,25 +14,21 @@ public class PenaltyCalculation {
     @ManyToOne
     private Contract contract;
 
-    private Integer daysDelayed;
-    private BigDecimal calculatedPenalty;
+    @ManyToOne
+    private DeliveryRecord deliveryRecord;
 
     @ManyToOne
-    private BreachRule appliedRule;
+    private BreachRule breachRule;
 
-    public void setContract(Contract contract) {
-        this.contract = contract;
+    private Integer daysDelayed;
+
+    private BigDecimal calculatedPenalty;
+
+    private LocalDateTime calculatedAt;
+
+    public PenaltyCalculation() {
+        this.calculatedAt = LocalDateTime.now();
     }
 
-    public void setDaysDelayed(Integer daysDelayed) {
-        this.daysDelayed = daysDelayed;
-    }
-
-    public void setCalculatedPenalty(BigDecimal calculatedPenalty) {
-        this.calculatedPenalty = calculatedPenalty;
-    }
-
-    public void setAppliedRule(BreachRule appliedRule) {
-        this.appliedRule = appliedRule;
-    }
+    // getters & setters
 }

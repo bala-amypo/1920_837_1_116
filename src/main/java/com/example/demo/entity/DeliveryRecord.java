@@ -1,7 +1,7 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Entity
 public class DeliveryRecord {
@@ -11,12 +11,20 @@ public class DeliveryRecord {
     private Long id;
 
     @ManyToOne
+    @JoinColumn(nullable = false)
     private Contract contract;
 
-    @Temporal(TemporalType.DATE)
-    private Date deliveryDate;
+    @Column(nullable = false)
+    private LocalDate deliveryDate;
 
-    public Date getDeliveryDate() {
-        return deliveryDate;
+    private String notes;
+
+    public DeliveryRecord() {}
+
+    public DeliveryRecord(Contract contract, LocalDate deliveryDate) {
+        this.contract = contract;
+        this.deliveryDate = deliveryDate;
     }
+
+    // getters & setters
 }
