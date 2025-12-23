@@ -15,9 +15,9 @@ public class Contract {
     private String contractNumber;
 
     private String title;
+
     private String counterpartyName;
 
-    // 🔴 MUST BE LocalDate (NOT Date)
     private LocalDate agreedDeliveryDate;
 
     private BigDecimal baseContractValue;
@@ -26,22 +26,61 @@ public class Contract {
 
     public Contract() {}
 
-    // ===== GETTERS & SETTERS =====
-    public LocalDate getAgreedDeliveryDate() {
-        return agreedDeliveryDate;
+    // ===== GETTERS =====
+    public Long getId() {
+        return id;
     }
 
-    public void setAgreedDeliveryDate(LocalDate agreedDeliveryDate) {
-        this.agreedDeliveryDate = agreedDeliveryDate;
+    public String getContractNumber() {
+        return contractNumber;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getCounterpartyName() {
+        return counterpartyName;
+    }
+
+    public LocalDate getAgreedDeliveryDate() {
+        return agreedDeliveryDate;
     }
 
     public BigDecimal getBaseContractValue() {
         return baseContractValue;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    // ===== SETTERS =====
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setContractNumber(String contractNumber) {
+        this.contractNumber = contractNumber;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setCounterpartyName(String counterpartyName) {
+        this.counterpartyName = counterpartyName;
+    }
+
+    public void setAgreedDeliveryDate(LocalDate agreedDeliveryDate) {
+        this.agreedDeliveryDate = agreedDeliveryDate;
+    }
+
     public void setBaseContractValue(BigDecimal baseContractValue) {
         this.baseContractValue = baseContractValue;
     }
 
-    // other getters/setters
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }
