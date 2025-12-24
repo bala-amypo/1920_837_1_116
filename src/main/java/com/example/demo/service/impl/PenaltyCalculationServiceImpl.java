@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -39,11 +40,11 @@ public class PenaltyCalculationServiceImpl implements PenaltyCalculationService 
 
         DeliveryRecord delivery = deliveryRepo
                 .findFirstByContractIdOrderByDeliveryDateDesc(contractId)
-                .orElseThrow(() -> new ResourceNotFoundException("Delivery record not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("No delivery record"));
 
         BreachRule rule = ruleRepo
                 .findFirstByActiveTrueOrderByIsDefaultRuleDesc()
-                .orElseThrow(() -> new ResourceNotFoundException("No active rule found"));
+                .orElseThrow(() -> new ResourceNotFoundException("No active breach rule"));
 
         LocalDate agreedDate = contract.getAgreedDeliveryDate();
         LocalDate actualDate = delivery.getDeliveryDate();
@@ -53,23 +54,21 @@ public class PenaltyCalculationServiceImpl implements PenaltyCalculationService 
             daysDelayed = 0;
         }
 
-        BigDecimal penalty =
+        BigDecimal rawPenalty =
                 rule.getPenaltyPerDay().multiply(BigDecimal.valueOf(daysDelayed));
 
         BigDecimal maxPenalty =
                 contract.getBaseContractValue()
                         .multiply(BigDecimal.valueOf(rule.getMaxPenaltyPercentage() / 100));
 
-        if (penalty.compareTo(maxPenalty) > 0) {
-            penalty = maxPenalty;
-        }
+        BigDecimal finalPenalty =
+                rawPenalty.compareTo(maxPenalty) > 0 ? maxPenalty : rawPenalty;
 
         PenaltyCalculation calc = new PenaltyCalculation();
         calc.setContract(contract);
-        calc.setDeliveryRecord(delivery);
-        calc.setBreachRule(rule);
         calc.setDaysDelayed((int) daysDelayed);
-        calc.setCalculatedPenalty(penalty);
+        calc.setCalculatedPenalty(finalPenalty);
+        calc.setCalculatedAt(LocalDateTime.now());
 
         return calculationRepo.save(calc);
     }
