@@ -18,24 +18,67 @@ public class PenaltyCalculation {
     private BigDecimal calculatedPenalty;
     private LocalDateTime calculatedAt;
 
+    // ===== GETTERS =====
     public Long getId() { return id; }
+
     public Contract getContract() { return contract; }
-    public void setContract(Contract c) { this.contract = c; }
-
     public Integer getDaysDelayed() { return daysDelayed; }
-    public void setDaysDelayed(Integer d) { this.daysDelayed = d; }
-
     public BigDecimal getCalculatedPenalty() { return calculatedPenalty; }
-    public void setCalculatedPenalty(BigDecimal p) { this.calculatedPenalty = p; }
+    public LocalDateTime getCalculatedAt() { return calculatedAt; }
 
-    public static Builder builder() { return new Builder(); }
+    // ===== SETTERS =====
+    public void setContract(Contract contract) {
+        this.contract = contract;
+    }
+
+    public void setDaysDelayed(Integer daysDelayed) {
+        this.daysDelayed = daysDelayed;
+    }
+
+    public void setCalculatedPenalty(BigDecimal calculatedPenalty) {
+        this.calculatedPenalty = calculatedPenalty;
+    }
+
+    // ✅ THIS IS THE MISSING METHOD (FIX)
+    public void setCalculatedAt(LocalDateTime calculatedAt) {
+        this.calculatedAt = calculatedAt;
+    }
+
+    // ===== BUILDER (used by tests) =====
+    public static Builder builder() {
+        return new Builder();
+    }
 
     public static class Builder {
         private final PenaltyCalculation p = new PenaltyCalculation();
-        public Builder id(Long id){ p.id = id; return this; }
-        public Builder contract(Contract c){ p.contract = c; return this; }
-        public Builder daysDelayed(Integer d){ p.daysDelayed = d; return this; }
-        public Builder calculatedPenalty(BigDecimal b){ p.calculatedPenalty = b; return this; }
-        public PenaltyCalculation build(){ return p; }
+
+        public Builder id(Long id) {
+            p.id = id;
+            return this;
+        }
+
+        public Builder contract(Contract contract) {
+            p.contract = contract;
+            return this;
+        }
+
+        public Builder daysDelayed(Integer daysDelayed) {
+            p.daysDelayed = daysDelayed;
+            return this;
+        }
+
+        public Builder calculatedPenalty(BigDecimal penalty) {
+            p.calculatedPenalty = penalty;
+            return this;
+        }
+
+        public Builder calculatedAt(LocalDateTime t) {
+            p.calculatedAt = t;
+            return this;
+        }
+
+        public PenaltyCalculation build() {
+            return p;
+        }
     }
 }
