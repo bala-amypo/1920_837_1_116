@@ -38,9 +38,14 @@ public class PenaltyCalculationServiceImpl implements PenaltyCalculationService 
         return new PenaltyCalculation();
     }
 
-    // 🔥 REQUIRED METHOD
     @Override
     public List<PenaltyCalculation> getCalculationsForContract(Long contractId) {
         return penaltyCalculationRepository.findAll();
+    }
+
+    // 🔥 MISSING METHOD — NOW FIXED
+    @Override
+    public PenaltyCalculation getCalculationById(Long id) {
+        return penaltyCalculationRepository.findById(id).orElse(null);
     }
 }

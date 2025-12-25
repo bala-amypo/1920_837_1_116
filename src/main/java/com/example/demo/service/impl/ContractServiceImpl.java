@@ -14,15 +14,14 @@ public class ContractServiceImpl implements ContractService {
     private final ContractRepository contractRepository;
     private final DeliveryRecordRepository deliveryRecordRepository;
 
-    // Required by tests
     public ContractServiceImpl() {
         this.contractRepository = null;
         this.deliveryRecordRepository = null;
     }
 
-    // Required by Spring
-    public ContractServiceImpl(ContractRepository contractRepository,
-                               DeliveryRecordRepository deliveryRecordRepository) {
+    public ContractServiceImpl(
+            ContractRepository contractRepository,
+            DeliveryRecordRepository deliveryRecordRepository) {
         this.contractRepository = contractRepository;
         this.deliveryRecordRepository = deliveryRecordRepository;
     }
@@ -37,13 +36,23 @@ public class ContractServiceImpl implements ContractService {
         return contractRepository.findAll();
     }
 
-    // 🔥 FIXED: return Contract (NOT Optional)
     @Override
     public Contract getContractById(Long id) {
         return contractRepository.findById(id).orElse(null);
     }
 
-    // 🔥 REQUIRED METHOD
+    // 🔥 MISSING METHOD — NOW FIXED
+    @Override
+    public Contract updateContract(Long id, Contract contract) {
+        Contract existing = contractRepository.findById(id).orElse(null);
+        if (existing != null) {
+            existing.setTitle(contract.getTitle());
+            existing.setCounterpartyName(contract.getCounterpartyName());
+            contractRepository.save(existing);
+        }
+        return existing;
+    }
+
     @Override
     public void updateContractStatus(Long id) {
         Contract contract = contractRepository.findById(id).orElse(null);

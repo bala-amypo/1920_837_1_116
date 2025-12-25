@@ -19,8 +19,9 @@ public class DeliveryRecordServiceImpl implements DeliveryRecordService {
         this.contractRepository = null;
     }
 
-    public DeliveryRecordServiceImpl(DeliveryRecordRepository deliveryRecordRepository,
-                                     ContractRepository contractRepository) {
+    public DeliveryRecordServiceImpl(
+            DeliveryRecordRepository deliveryRecordRepository,
+            ContractRepository contractRepository) {
         this.deliveryRecordRepository = deliveryRecordRepository;
         this.contractRepository = contractRepository;
     }
@@ -35,9 +36,16 @@ public class DeliveryRecordServiceImpl implements DeliveryRecordService {
         return deliveryRecordRepository.findAll();
     }
 
-    // 🔥 REQUIRED METHOD
     @Override
     public List<DeliveryRecord> getDeliveryRecordsForContract(Long contractId) {
         return deliveryRecordRepository.findAll();
+    }
+
+    // 🔥 MISSING METHOD — NOW FIXED
+    @Override
+    public DeliveryRecord getLatestDeliveryRecord(Long contractId) {
+        return deliveryRecordRepository
+                .findFirstByContractIdOrderByDeliveryDateDesc(contractId)
+                .orElse(null);
     }
 }
