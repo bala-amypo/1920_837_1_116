@@ -2,7 +2,6 @@ package com.example.demo.controller;
 
 import com.example.demo.entity.Contract;
 import com.example.demo.service.ContractService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,30 +17,27 @@ public class ContractController {
     }
 
     @PostMapping
-    public ResponseEntity<Contract> create(@RequestBody Contract contract) {
-        return ResponseEntity.ok(service.createContract(contract));
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Contract> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(service.getContractById(id));
+    public Contract create(@RequestBody Contract contract) {
+        return service.createContract(contract);
     }
 
     @GetMapping
-    public ResponseEntity<List<Contract>> getAll() {
-        return ResponseEntity.ok(service.getAllContracts());
+    public List<Contract> getAll() {
+        return service.getAllContracts();
+    }
+
+    @GetMapping("/{id}")
+    public Contract getById(@PathVariable Long id) {
+        return service.getContractById(id);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Contract> update(
-            @PathVariable Long id,
-            @RequestBody Contract contract) {
-        return ResponseEntity.ok(service.updateContract(id, contract));
+    public Contract update(@PathVariable Long id, @RequestBody Contract contract) {
+        return service.updateContract(id, contract);
     }
 
-    @PutMapping("/{id}/status")
-    public ResponseEntity<Void> updateStatus(@PathVariable Long id) {
+    @PatchMapping("/{id}/status")
+    public void updateStatus(@PathVariable Long id) {
         service.updateContractStatus(id);
-        return ResponseEntity.ok().build();
     }
 }
