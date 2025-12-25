@@ -1,16 +1,12 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.DeliveryRecord;
-import java.util.List;
 
 public interface DeliveryRecordService {
 
     DeliveryRecord createDeliveryRecord(DeliveryRecord record);
 
-    List<DeliveryRecord> getDeliveryRecordsForContract(Long contractId);
+    DeliveryRecord getRecordById(Long id);
 
     DeliveryRecord getLatestDeliveryRecord(Long contractId);
-
-    // 🔴 THIS METHOD EXISTS → must be implemented
-    DeliveryRecord getRecordById(Long id);
 }

@@ -1,7 +1,8 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.*;
 import lombok.*;
+import jakarta.persistence.*;
+import java.math.BigDecimal;
 
 @Entity
 @Getter
@@ -17,7 +18,7 @@ public class BreachReport {
 
     private Long contractId;
 
-    private Double penaltyAmount;
+    private Integer delayDays;
 
-    private String status;
+    private BigDecimal penaltyAmount;
 }
