@@ -43,4 +43,9 @@ public class BreachRuleServiceImpl implements BreachRuleService {
             breachRuleRepository.save(rule);
         });
     }
+    @Override
+public List<BreachRule> getAllRules() {
+    return breachRuleRepository.findAll();
+}
+
 }

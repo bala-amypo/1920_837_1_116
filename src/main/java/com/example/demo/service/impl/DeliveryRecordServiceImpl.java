@@ -29,4 +29,9 @@ public class DeliveryRecordServiceImpl implements DeliveryRecordService {
                 .findFirstByContractIdOrderByDeliveryDateDesc(contractId)
                 .orElse(null);
     }
+    @Override
+public List<DeliveryRecord> getDeliveryRecordsForContract(Long contractId) {
+    return deliveryRecordRepository.findByContractId(contractId);
+}
+
 }
