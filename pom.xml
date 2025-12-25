@@ -6,6 +6,7 @@
 
     <modelVersion>4.0.0</modelVersion>
 
+    <!-- Spring Boot Parent -->
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
@@ -17,8 +18,8 @@
     <artifactId>demo</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
-    <name>Demo Project</name>
-    <description>Contract Breach Penalty Calculator</description>
+    <name>Contract Breach Penalty Calculator</name>
+    <description>Spring Boot REST API with Swagger and TestNG</description>
 
     <properties>
         <java.version>17</java.version>
@@ -28,20 +29,6 @@
     <dependencies>
 
         <!-- Spring Boot Web -->
-        <dependency>
-    <groupId>org.projectlombok</groupId>
-    <artifactId>lombok</artifactId>
-    <version>1.18.32</version>
-    <scope>provided</scope>
-</dependency>
-<dependency>
-    <groupId>org.projectlombok</groupId>
-    <artifactId>lombok</artifactId>
-    <version>1.18.30</version>
-    <scope>provided</scope>
-</dependency>
-
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -60,7 +47,7 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!-- Spring Security (needed for BCrypt + UserDetails) -->
+        <!-- Spring Security (needed for BCrypt / basic auth support) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
@@ -94,24 +81,32 @@
             <version>${springdoc.version}</version>
         </dependency>
 
-        <!-- ❌ REMOVE JUnit, USE TESTNG -->
+        <!-- Lombok (ONLY ONCE) -->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.32</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- Spring Boot Test (JUnit excluded) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
             <exclusions>
                 <exclusion>
-                    <groupId>org.junit.vintage</groupId>
-                    <artifactId>junit-vintage-engine</artifactId>
-                </exclusion>
-                <exclusion>
                     <groupId>org.junit.jupiter</groupId>
                     <artifactId>junit-jupiter</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.junit.vintage</groupId>
+                    <artifactId>junit-vintage-engine</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
 
-        <!-- ✅ TESTNG (REQUIRED BY YOUR TEST FILE) -->
+        <!-- TestNG (REQUIRED by your test cases) -->
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
@@ -130,7 +125,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
 
-            <!-- ✅ SUREFIRE PLUGIN FOR TESTNG -->
+            <!-- Surefire Plugin for TestNG -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
