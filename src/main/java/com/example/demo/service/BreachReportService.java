@@ -11,6 +11,5 @@ public interface BreachReportService {
 
     List<BreachReport> getAllReports();
 
-    // ✅ ADD THIS
     List<BreachReport> getReportsForContract(Long contractId);
 }
