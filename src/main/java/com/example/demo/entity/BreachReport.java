@@ -1,17 +1,8 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class BreachReport {
 
     @Id
@@ -19,10 +10,49 @@ public class BreachReport {
     private Long id;
 
     private Long contractId;
+    private Integer daysDelayed;
+    private Double penaltyAmount;
 
-    private Integer delayDays;
+    public BreachReport() {}
 
-    private BigDecimal totalPenalty;
+    // ✅ GETTERS & SETTERS
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    private LocalDate reportDate;
+    public Long getContractId() { return contractId; }
+    public void setContractId(Long contractId) { this.contractId = contractId; }
+
+    public Integer getDaysDelayed() { return daysDelayed; }
+    public void setDaysDelayed(Integer daysDelayed) { this.daysDelayed = daysDelayed; }
+
+    public Double getPenaltyAmount() { return penaltyAmount; }
+    public void setPenaltyAmount(Double penaltyAmount) { this.penaltyAmount = penaltyAmount; }
+
+    // ✅ MANUAL BUILDER (REQUIRED FOR TESTS)
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private final BreachReport report = new BreachReport();
+
+        public Builder contractId(Long contractId) {
+            report.contractId = contractId;
+            return this;
+        }
+
+        public Builder daysDelayed(Integer daysDelayed) {
+            report.daysDelayed = daysDelayed;
+            return this;
+        }
+
+        public Builder penaltyAmount(Double penaltyAmount) {
+            report.penaltyAmount = penaltyAmount;
+            return this;
+        }
+
+        public BreachReport build() {
+            return report;
+        }
+    }
 }

@@ -1,46 +1,58 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.BreachReport;
-import com.example.demo.repository.BreachReportRepository;
-import com.example.demo.service.BreachReportService;
+import com.example.demo.entity.BreachRule;
+import com.example.demo.repository.BreachRuleRepository;
+import com.example.demo.service.BreachRuleService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class BreachReportServiceImpl implements BreachReportService {
+public class BreachRuleServiceImpl implements BreachRuleService {
 
-    private BreachReportRepository repository;
+    private BreachRuleRepository repository;
 
-    public BreachReportServiceImpl() {
-    }
+    public BreachRuleServiceImpl() {}
 
-    public BreachReportServiceImpl(BreachReportRepository repository) {
+    public BreachRuleServiceImpl(BreachRuleRepository repository) {
         this.repository = repository;
     }
 
     @Override
-    public BreachReport generateReport(Long contractId) {
-        return BreachReport.builder()
-                .contractId(contractId)
-                .build();
+    public BreachRule createRule(BreachRule rule) {
+        return repository.save(rule);
     }
 
     @Override
-    public BreachReport getReportById(Long id) {
-        return repository != null ? repository.findById(id).orElse(null) : null;
+    public BreachRule getRuleById(Long id) {
+        return repository.findById(id).orElse(null);
     }
 
     @Override
-    public List<BreachReport> getAllReports() {
-        return repository != null ? repository.findAll() : List.of();
+    public List<BreachRule> getAllRules() {
+        return repository.findAll();
     }
 
-    // ✅ REQUIRED BY CONTROLLER + TESTS
     @Override
-    public List<BreachReport> getReportsForContract(Long contractId) {
-        return repository != null
-                ? repository.findByContractId(contractId)
-                : List.of();
+    public BreachRule updateRule(Long id, BreachRule rule) {
+        BreachRule existing = repository.findById(id).orElse(null);
+        if (existing == null) return null;
+        existing.setPenaltyPerDay(rule.getPenaltyPerDay());
+        existing.setMaxPenaltyPercentage(rule.getMaxPenaltyPercentage());
+        return repository.save(existing);
+    }
+
+    @Override
+    public void deactivateRule(Long id) {
+        BreachRule rule = repository.findById(id).orElse(null);
+        if (rule != null) {
+            rule.setActive(false);
+            repository.save(rule);
+        }
+    }
+
+    @Override
+    public BreachRule getActiveDefaultOrFirst() {
+        return repository.findFirstByActiveTrueOrderByIsDefaultRuleDesc();
     }
 }

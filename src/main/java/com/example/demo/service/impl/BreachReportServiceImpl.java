@@ -12,8 +12,7 @@ public class BreachReportServiceImpl implements BreachReportService {
 
     private BreachReportRepository repository;
 
-    public BreachReportServiceImpl() {
-    }
+    public BreachReportServiceImpl() {}
 
     public BreachReportServiceImpl(BreachReportRepository repository) {
         this.repository = repository;
@@ -21,16 +20,23 @@ public class BreachReportServiceImpl implements BreachReportService {
 
     @Override
     public BreachReport generateReport(Long contractId) {
-        return BreachReport.builder().contractId(contractId).build();
+        return BreachReport.builder()
+                .contractId(contractId)
+                .build();
     }
 
     @Override
     public BreachReport getReportById(Long id) {
-        return repository != null ? repository.findById(id).orElse(null) : null;
+        return repository.findById(id).orElse(null);
     }
 
     @Override
     public List<BreachReport> getAllReports() {
-        return repository != null ? repository.findAll() : List.of();
+        return repository.findAll();
+    }
+
+    @Override
+    public List<BreachReport> getReportsForContract(Long contractId) {
+        return repository.findByContractId(contractId);
     }
 }
