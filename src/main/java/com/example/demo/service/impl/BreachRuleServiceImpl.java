@@ -10,9 +10,7 @@ import java.util.List;
 @Service
 public class BreachRuleServiceImpl implements BreachRuleService {
 
-    private BreachRuleRepository repository;
-
-    public BreachRuleServiceImpl() {}
+    private final BreachRuleRepository repository;
 
     public BreachRuleServiceImpl(BreachRuleRepository repository) {
         this.repository = repository;
@@ -24,22 +22,24 @@ public class BreachRuleServiceImpl implements BreachRuleService {
     }
 
     @Override
-public BreachRule getRuleById(Long id) {
-    return repository.findById(id).orElse(null);
-}
-
-
-    @Override
     public List<BreachRule> getAllRules() {
         return repository.findAll();
+    }
+
+    @Override
+    public BreachRule getRuleById(Long id) {
+        return repository.findById(id).orElse(null);
     }
 
     @Override
     public BreachRule updateRule(Long id, BreachRule rule) {
         BreachRule existing = repository.findById(id).orElse(null);
         if (existing == null) return null;
+
         existing.setPenaltyPerDay(rule.getPenaltyPerDay());
         existing.setMaxPenaltyPercentage(rule.getMaxPenaltyPercentage());
+        existing.setActive(rule.isActive());
+
         return repository.save(existing);
     }
 
@@ -54,6 +54,7 @@ public BreachRule getRuleById(Long id) {
 
     @Override
     public BreachRule getActiveDefaultOrFirst() {
-        return repository.findFirstByActiveTrueOrderByIsDefaultRuleDesc();
+        List<BreachRule> rules = repository.findAll();
+        return rules.isEmpty() ? null : rules.get(0);
     }
 }
