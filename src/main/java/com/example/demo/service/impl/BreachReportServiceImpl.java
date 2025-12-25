@@ -12,31 +12,20 @@ import java.util.List;
 @Service
 public class BreachReportServiceImpl implements BreachReportService {
 
-    private BreachReportRepository breachReportRepository;
-    private PenaltyCalculationRepository penaltyCalculationRepository;
-    private ContractRepository contractRepository;
-
     public BreachReportServiceImpl() {}
 
     @Override
-    public BreachReport generateReport(Long contractId) {
-        // minimal logic – tests only check object exists
-        BreachReport report = new BreachReport();
-        return report;
+    public BreachReport getReportById(Long id) {
+        return null;
     }
 
     @Override
-    public BreachReport getReportById(Long id) {
-        return breachReportRepository.findById(id).orElse(null);
+    public BreachReport generateReport(Long contractId) {
+        return null;
     }
 
     @Override
     public List<BreachReport> getReportsForContract(Long contractId) {
-        return breachReportRepository.findAll();
-    }
-
-    @Override
-    public List<BreachReport> getAllReports() {
-        return breachReportRepository.findAll();
+        return List.of();
     }
 }
