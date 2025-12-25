@@ -11,29 +11,19 @@ import java.util.List;
 @Service
 public class DeliveryRecordServiceImpl implements DeliveryRecordService {
 
-    private final DeliveryRecordRepository deliveryRecordRepository;
-    private final ContractRepository contractRepository;
+    private DeliveryRecordRepository deliveryRecordRepository;
+    private ContractRepository contractRepository;
 
-    public DeliveryRecordServiceImpl() {
-        this.deliveryRecordRepository = null;
-        this.contractRepository = null;
-    }
-
-    public DeliveryRecordServiceImpl(
-            DeliveryRecordRepository deliveryRecordRepository,
-            ContractRepository contractRepository) {
-        this.deliveryRecordRepository = deliveryRecordRepository;
-        this.contractRepository = contractRepository;
-    }
+    public DeliveryRecordServiceImpl() {}
 
     @Override
-    public DeliveryRecord createRecord(DeliveryRecord record) {
+    public DeliveryRecord createDeliveryRecord(DeliveryRecord record) {
         return deliveryRecordRepository.save(record);
     }
 
     @Override
-    public List<DeliveryRecord> getAllRecords() {
-        return deliveryRecordRepository.findAll();
+    public DeliveryRecord getRecordById(Long id) {
+        return deliveryRecordRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -41,7 +31,6 @@ public class DeliveryRecordServiceImpl implements DeliveryRecordService {
         return deliveryRecordRepository.findAll();
     }
 
-    // 🔥 MISSING METHOD — NOW FIXED
     @Override
     public DeliveryRecord getLatestDeliveryRecord(Long contractId) {
         return deliveryRecordRepository
