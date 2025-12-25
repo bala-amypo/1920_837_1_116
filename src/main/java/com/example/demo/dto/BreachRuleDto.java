@@ -10,8 +10,7 @@ public class BreachRuleDto {
     private Boolean active;
     private Boolean isDefaultRule;
 
-    public BreachRuleDto() {
-    }
+    public BreachRuleDto() {}
 
     public String getRuleName() {
         return ruleName;
