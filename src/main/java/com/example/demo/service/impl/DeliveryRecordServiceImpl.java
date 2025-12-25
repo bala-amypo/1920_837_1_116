@@ -14,34 +14,33 @@ public class DeliveryRecordServiceImpl implements DeliveryRecordService {
     private DeliveryRecordRepository deliveryRecordRepository;
     private ContractRepository contractRepository;
 
-    public DeliveryRecordServiceImpl() {
-    }
+    public DeliveryRecordServiceImpl() {}
 
-    public DeliveryRecordServiceImpl(DeliveryRecordRepository deliveryRecordRepository,
-                                     ContractRepository contractRepository) {
+    public DeliveryRecordServiceImpl(
+            DeliveryRecordRepository deliveryRecordRepository,
+            ContractRepository contractRepository) {
         this.deliveryRecordRepository = deliveryRecordRepository;
         this.contractRepository = contractRepository;
     }
 
     @Override
+    public DeliveryRecord createDeliveryRecord(DeliveryRecord record) {
+        return deliveryRecordRepository.save(record);
+    }
+
+    @Override
     public DeliveryRecord getRecordById(Long id) {
-        return deliveryRecordRepository != null
-                ? deliveryRecordRepository.findById(id).orElse(null)
-                : null;
+        return deliveryRecordRepository.findById(id).orElse(null);
     }
 
     @Override
     public List<DeliveryRecord> getDeliveryRecordsForContract(Long contractId) {
-        return deliveryRecordRepository != null
-                ? deliveryRecordRepository.findByContractId(contractId)
-                : List.of();
+        return deliveryRecordRepository.findByContractId(contractId);
     }
 
     @Override
     public DeliveryRecord getLatestDeliveryRecord(Long contractId) {
-        // ✅ NO orElse() HERE
-        return deliveryRecordRepository != null
-                ? deliveryRecordRepository.findFirstByContractIdOrderByDeliveryDateDesc(contractId)
-                : null;
+        return deliveryRecordRepository
+                .findFirstByContractIdOrderByDeliveryDateDesc(contractId);
     }
 }

@@ -24,9 +24,10 @@ public class BreachRuleServiceImpl implements BreachRuleService {
     }
 
     @Override
-    public BreachRule getRuleById(Long id) {
-        return repository.findById(id).orElse(null);
-    }
+public BreachRule getRuleById(Long id) {
+    return repository.findById(id).orElse(null);
+}
+
 
     @Override
     public List<BreachRule> getAllRules() {
