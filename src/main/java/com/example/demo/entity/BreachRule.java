@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import java.math.BigDecimal;
 
 @Entity
+@Table(name = "breach_rules")
 public class BreachRule {
 
     @Id
@@ -13,12 +14,13 @@ public class BreachRule {
     private String ruleName;
     private BigDecimal penaltyPerDay;
     private Double maxPenaltyPercentage;
-    private Boolean active;
-    private Boolean isDefaultRule;
+    private boolean active;
+    private boolean isDefaultRule;
 
+    // ---------- Constructors ----------
     public BreachRule() {}
 
-    // getters & setters
+    // ---------- Getters & Setters ----------
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
@@ -29,11 +31,56 @@ public class BreachRule {
     public void setPenaltyPerDay(BigDecimal penaltyPerDay) { this.penaltyPerDay = penaltyPerDay; }
 
     public Double getMaxPenaltyPercentage() { return maxPenaltyPercentage; }
-    public void setMaxPenaltyPercentage(Double maxPenaltyPercentage) { this.maxPenaltyPercentage = maxPenaltyPercentage; }
+    public void setMaxPenaltyPercentage(Double maxPenaltyPercentage) {
+        this.maxPenaltyPercentage = maxPenaltyPercentage;
+    }
 
-    public Boolean getActive() { return active; }
-    public void setActive(Boolean active) { this.active = active; }
+    public boolean isActive() { return active; }
+    public void setActive(boolean active) { this.active = active; }
 
-    public Boolean getIsDefaultRule() { return isDefaultRule; }
-    public void setIsDefaultRule(Boolean isDefaultRule) { this.isDefaultRule = isDefaultRule; }
+    public boolean isDefaultRule() { return isDefaultRule; }
+    public void setDefaultRule(boolean defaultRule) { isDefaultRule = defaultRule; }
+
+    // ---------- BUILDER ----------
+    public static Builder builder() {
+        return new Builder();
+    }
+
+    public static class Builder {
+        private final BreachRule rule = new BreachRule();
+
+        public Builder id(Long id) {
+            rule.setId(id);
+            return this;
+        }
+
+        public Builder ruleName(String ruleName) {
+            rule.setRuleName(ruleName);
+            return this;
+        }
+
+        public Builder penaltyPerDay(BigDecimal penaltyPerDay) {
+            rule.setPenaltyPerDay(penaltyPerDay);
+            return this;
+        }
+
+        public Builder maxPenaltyPercentage(Double maxPenaltyPercentage) {
+            rule.setMaxPenaltyPercentage(maxPenaltyPercentage);
+            return this;
+        }
+
+        public Builder active(boolean active) {
+            rule.setActive(active);
+            return this;
+        }
+
+        public Builder isDefaultRule(boolean isDefaultRule) {
+            rule.setDefaultRule(isDefaultRule);
+            return this;
+        }
+
+        public BreachRule build() {
+            return rule;
+        }
+    }
 }
