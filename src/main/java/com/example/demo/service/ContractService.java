@@ -1,17 +1,15 @@
 package com.example.demo.service;
 
-import com.example.demo.entity.Contract;
+import com.example.demo.entity.BreachReport;
 import java.util.List;
 
-public interface ContractService {
+public interface BreachReportService {
 
-    Contract createContract(Contract contract);
+    BreachReport generateReport(Long contractId);
 
-    Contract updateContract(Long id, Contract contract);
+    BreachReport getReportById(Long id);
 
-    Contract getContractById(Long id);
+    List<BreachReport> getReportsForContract(Long contractId);
 
-    List<Contract> getAllContracts();
-
-    void updateContractStatus(Long id);
+    List<BreachReport> getAllReports();
 }

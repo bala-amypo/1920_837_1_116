@@ -11,3 +11,4 @@ public interface PenaltyCalculationService {
 
     List<PenaltyCalculation> getCalculationsForContract(Long contractId);
 }
+    
