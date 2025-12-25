@@ -1,7 +1,7 @@
 package com.example.demo.entity;
 
-import lombok.*;
 import jakarta.persistence.*;
+import lombok.*;
 
 @Entity
 @Getter
@@ -15,9 +15,9 @@ public class BreachReport {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    private Contract contract;
+    private Long contractId;
 
     private Double penaltyAmount;
-    private String description;
+
+    private String status;
 }
