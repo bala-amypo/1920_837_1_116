@@ -11,22 +11,21 @@ public class BreachRule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
     private String ruleName;
 
-    @Column(nullable = false)
     private BigDecimal penaltyPerDay;
 
-    @Column(nullable = false)
     private Double maxPenaltyPercentage;
 
-    private Boolean active = true;
+    private Boolean active;
 
-    private Boolean isDefaultRule = false;
+    private Boolean isDefaultRule;
 
-    public BreachRule() {}
+    public BreachRule() {
+    }
 
-    // ===== GETTERS =====
+    // ---------- GETTERS ----------
+
     public Long getId() {
         return id;
     }
@@ -51,7 +50,8 @@ public class BreachRule {
         return isDefaultRule;
     }
 
-    // ===== SETTERS =====
+    // ---------- SETTERS ----------
+
     public void setId(Long id) {
         this.id = id;
     }
