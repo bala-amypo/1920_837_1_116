@@ -28,4 +28,12 @@ public class BreachRuleServiceImpl implements BreachRuleService {
     public List<BreachRule> getAllRules() {
         return breachRuleRepository.findAll();
     }
+    @Override
+public void deactivateRule(Long id) {
+    BreachRule rule = breachRuleRepository.findById(id)
+            .orElseThrow(() -> new RuntimeException("Rule not found"));
+    rule.setActive(false);
+    breachRuleRepository.save(rule);
+}
+
 }
