@@ -1,10 +1,15 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "breach_rules")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class BreachRule {
 
     @Id
@@ -20,59 +25,4 @@ public class BreachRule {
     private Boolean active;
 
     private Boolean isDefaultRule;
-
-    public BreachRule() {
-    }
-
-    // ---------- GETTERS ----------
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getRuleName() {
-        return ruleName;
-    }
-
-    public BigDecimal getPenaltyPerDay() {
-        return penaltyPerDay;
-    }
-
-    public Double getMaxPenaltyPercentage() {
-        return maxPenaltyPercentage;
-    }
-
-    public Boolean getActive() {
-        return active;
-    }
-
-    public Boolean getIsDefaultRule() {
-        return isDefaultRule;
-    }
-
-    // ---------- SETTERS ----------
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setRuleName(String ruleName) {
-        this.ruleName = ruleName;
-    }
-
-    public void setPenaltyPerDay(BigDecimal penaltyPerDay) {
-        this.penaltyPerDay = penaltyPerDay;
-    }
-
-    public void setMaxPenaltyPercentage(Double maxPenaltyPercentage) {
-        this.maxPenaltyPercentage = maxPenaltyPercentage;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
-
-    public void setIsDefaultRule(Boolean isDefaultRule) {
-        this.isDefaultRule = isDefaultRule;
-    }
 }
