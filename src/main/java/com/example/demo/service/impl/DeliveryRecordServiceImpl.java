@@ -30,13 +30,19 @@ public class DeliveryRecordServiceImpl implements DeliveryRecordService {
 
     @Override
     public List<DeliveryRecord> getDeliveryRecordsForContract(Long contractId) {
-
         Optional<DeliveryRecord> record =
                 deliveryRecordRepository.findByContractId(contractId);
 
-        // ✅ Convert Optional → List
         return record
                 .map(Collections::singletonList)
                 .orElse(Collections.emptyList());
+    }
+
+    // ✅ THIS WAS MISSING — NOW ADDED
+    @Override
+    public DeliveryRecord getLatestDeliveryRecord(Long contractId) {
+        return deliveryRecordRepository
+                .findByContractId(contractId)
+                .orElse(null);
     }
 }
