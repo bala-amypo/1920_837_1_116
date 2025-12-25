@@ -1,28 +1,15 @@
 package com.example.demo.dto;
 
+import java.util.Set;
+
 public class AuthResponseDto {
 
-    private String token;
     private Long userId;
     private String email;
-    private String role;
+    private String token;
+    private Set<String> roles;
 
     public AuthResponseDto() {}
-
-    public AuthResponseDto(String token, Long userId, String email, String role) {
-        this.token = token;
-        this.userId = userId;
-        this.email = email;
-        this.role = role;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
 
     public Long getUserId() {
         return userId;
@@ -40,11 +27,19 @@ public class AuthResponseDto {
         this.email = email;
     }
 
-    public String getRole() {
-        return role;
+    public String getToken() {
+        return token;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public Set<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<String> roles) {
+        this.roles = roles;
     }
 }
