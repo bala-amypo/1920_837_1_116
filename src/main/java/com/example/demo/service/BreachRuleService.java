@@ -4,7 +4,10 @@ import com.example.demo.entity.BreachRule;
 import java.util.List;
 
 public interface BreachRuleService {
-    BreachRule createRule(BreachRule rule);
-    BreachRule getRuleById(Long id);
-}
 
+    BreachRule createRule(BreachRule rule);
+
+    BreachRule getRuleById(Long id);
+
+    List<BreachRule> getAllRules();
+}

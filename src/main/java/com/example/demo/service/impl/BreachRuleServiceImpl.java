@@ -1,23 +1,41 @@
+package com.example.demo.service.impl;
+
+import com.example.demo.entity.BreachRule;
+import com.example.demo.repository.BreachRuleRepository;
+import com.example.demo.service.BreachRuleService;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 @Service
 public class BreachRuleServiceImpl implements BreachRuleService {
 
     @Autowired
-    private BreachRuleRepository repository;
+    private BreachRuleRepository breachRuleRepository;
 
-    // REQUIRED BY TEST
-    public BreachRuleServiceImpl() {}
+    // REQUIRED: No-arg constructor (tests use new BreachRuleServiceImpl())
+    public BreachRuleServiceImpl() {
+    }
 
-    public BreachRuleServiceImpl(BreachRuleRepository repository) {
-        this.repository = repository;
+    // Optional constructor (Spring use)
+    public BreachRuleServiceImpl(BreachRuleRepository breachRuleRepository) {
+        this.breachRuleRepository = breachRuleRepository;
     }
 
     @Override
     public BreachRule createRule(BreachRule rule) {
-        return repository.save(rule);
+        return breachRuleRepository.save(rule);
     }
 
     @Override
     public BreachRule getRuleById(Long id) {
-        return repository.findById(id).orElse(null);
+        return breachRuleRepository.findById(id).orElse(null);
+    }
+
+    @Override
+    public List<BreachRule> getAllRules() {
+        return breachRuleRepository.findAll();
     }
 }
