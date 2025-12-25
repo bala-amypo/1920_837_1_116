@@ -12,12 +12,10 @@ public class BreachRuleServiceImpl implements BreachRuleService {
 
     private final BreachRuleRepository breachRuleRepository;
 
-    // ✅ REQUIRED BY TESTS
     public BreachRuleServiceImpl() {
         this.breachRuleRepository = null;
     }
 
-    // ✅ REQUIRED BY SPRING
     public BreachRuleServiceImpl(BreachRuleRepository breachRuleRepository) {
         this.breachRuleRepository = breachRuleRepository;
     }
@@ -27,12 +25,21 @@ public class BreachRuleServiceImpl implements BreachRuleService {
         return breachRuleRepository.save(rule);
     }
 
+    // 🔥 REQUIRED METHOD
+    @Override
+    public BreachRule getRuleById(Long id) {
+        return breachRuleRepository.findById(id).orElse(null);
+    }
+
     @Override
     public BreachRule updateRule(Long id, BreachRule rule) {
-        BreachRule existing = breachRuleRepository.findById(id).orElseThrow();
-        existing.setPenaltyPerDay(rule.getPenaltyPerDay());
-        existing.setMaxPenaltyPercentage(rule.getMaxPenaltyPercentage());
-        return breachRuleRepository.save(existing);
+        BreachRule existing = breachRuleRepository.findById(id).orElse(null);
+        if (existing != null) {
+            existing.setPenaltyPerDay(rule.getPenaltyPerDay());
+            existing.setMaxPenaltyPercentage(rule.getMaxPenaltyPercentage());
+            breachRuleRepository.save(existing);
+        }
+        return existing;
     }
 
     @Override
@@ -42,9 +49,11 @@ public class BreachRuleServiceImpl implements BreachRuleService {
 
     @Override
     public void deactivateRule(Long id) {
-        BreachRule rule = breachRuleRepository.findById(id).orElseThrow();
-        rule.setActive(false);
-        breachRuleRepository.save(rule);
+        BreachRule rule = breachRuleRepository.findById(id).orElse(null);
+        if (rule != null) {
+            rule.setActive(false);
+            breachRuleRepository.save(rule);
+        }
     }
 
     @Override

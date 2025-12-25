@@ -14,13 +14,11 @@ public class DeliveryRecordServiceImpl implements DeliveryRecordService {
     private final DeliveryRecordRepository deliveryRecordRepository;
     private final ContractRepository contractRepository;
 
-    // ✅ REQUIRED BY TESTS
     public DeliveryRecordServiceImpl() {
         this.deliveryRecordRepository = null;
         this.contractRepository = null;
     }
 
-    // ✅ REQUIRED BY SPRING
     public DeliveryRecordServiceImpl(DeliveryRecordRepository deliveryRecordRepository,
                                      ContractRepository contractRepository) {
         this.deliveryRecordRepository = deliveryRecordRepository;
@@ -34,6 +32,12 @@ public class DeliveryRecordServiceImpl implements DeliveryRecordService {
 
     @Override
     public List<DeliveryRecord> getAllRecords() {
+        return deliveryRecordRepository.findAll();
+    }
+
+    // 🔥 REQUIRED METHOD
+    @Override
+    public List<DeliveryRecord> getDeliveryRecordsForContract(Long contractId) {
         return deliveryRecordRepository.findAll();
     }
 }

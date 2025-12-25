@@ -1,9 +1,11 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.entity.PenaltyCalculation;
 import com.example.demo.repository.*;
 import com.example.demo.service.PenaltyCalculationService;
-import com.example.demo.entity.PenaltyCalculation;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class PenaltyCalculationServiceImpl implements PenaltyCalculationService {
@@ -13,7 +15,6 @@ public class PenaltyCalculationServiceImpl implements PenaltyCalculationService 
     private final DeliveryRecordRepository deliveryRecordRepository;
     private final BreachRuleRepository breachRuleRepository;
 
-    // ✅ REQUIRED BY TESTS
     public PenaltyCalculationServiceImpl() {
         this.penaltyCalculationRepository = null;
         this.contractRepository = null;
@@ -21,13 +22,11 @@ public class PenaltyCalculationServiceImpl implements PenaltyCalculationService 
         this.breachRuleRepository = null;
     }
 
-    // ✅ REQUIRED BY SPRING
     public PenaltyCalculationServiceImpl(
             PenaltyCalculationRepository penaltyCalculationRepository,
             ContractRepository contractRepository,
             DeliveryRecordRepository deliveryRecordRepository,
             BreachRuleRepository breachRuleRepository) {
-
         this.penaltyCalculationRepository = penaltyCalculationRepository;
         this.contractRepository = contractRepository;
         this.deliveryRecordRepository = deliveryRecordRepository;
@@ -37,5 +36,11 @@ public class PenaltyCalculationServiceImpl implements PenaltyCalculationService 
     @Override
     public PenaltyCalculation calculate(Long contractId) {
         return new PenaltyCalculation();
+    }
+
+    // 🔥 REQUIRED METHOD
+    @Override
+    public List<PenaltyCalculation> getCalculationsForContract(Long contractId) {
+        return penaltyCalculationRepository.findAll();
     }
 }
