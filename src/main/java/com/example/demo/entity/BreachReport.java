@@ -1,10 +1,8 @@
 package com.example.demo.entity;
 
 import lombok.*;
-import jakarta.persistence.*;
 import java.math.BigDecimal;
 
-@Entity
 @Getter
 @Setter
 @NoArgsConstructor
@@ -12,13 +10,8 @@ import java.math.BigDecimal;
 @Builder
 public class BreachReport {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private Long contractId;
-
-    private Integer delayDays;
-
+    private Contract contract;
+    private int daysDelayed;
     private BigDecimal penaltyAmount;
 }
