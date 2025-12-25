@@ -7,7 +7,8 @@ import com.example.demo.service.DeliveryRecordService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-@Service
+@Serviceimport java.util.List;
+
 @RequiredArgsConstructor
 public class DeliveryRecordServiceImpl implements DeliveryRecordService {
 

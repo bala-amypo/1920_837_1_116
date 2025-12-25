@@ -6,6 +6,7 @@ import com.example.demo.service.BreachRuleService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
