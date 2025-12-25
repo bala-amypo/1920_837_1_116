@@ -7,10 +7,10 @@ public interface DeliveryRecordService {
 
     DeliveryRecord createDeliveryRecord(DeliveryRecord record);
 
-    DeliveryRecord getRecordById(Long id);
+    List<DeliveryRecord> getDeliveryRecordsForContract(Long contractId);
 
     DeliveryRecord getLatestDeliveryRecord(Long contractId);
 
-    List<DeliveryRecord> getDeliveryRecordsForContract(Long contractId);
+    // 🔴 THIS METHOD EXISTS → must be implemented
+    DeliveryRecord getRecordById(Long id);
 }
-    

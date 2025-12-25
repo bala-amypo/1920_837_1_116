@@ -15,6 +15,7 @@ public class DeliveryRecordServiceImpl implements DeliveryRecordService {
     @Autowired
     private DeliveryRecordRepository repository;
 
+    // Required for tests
     public DeliveryRecordServiceImpl() {
     }
 
@@ -37,5 +38,11 @@ public class DeliveryRecordServiceImpl implements DeliveryRecordService {
         return repository
                 .findFirstByContractIdOrderByDeliveryDateDesc(contractId)
                 .orElse(null);
+    }
+
+    // ✅ THIS FIXES YOUR ERROR
+    @Override
+    public DeliveryRecord getRecordById(Long id) {
+        return repository.findById(id).orElse(null);
     }
 }
