@@ -9,6 +9,8 @@ public interface BreachRuleService {
 
     BreachRule updateRule(Long id, BreachRule rule);
 
+    BreachRule getRuleById(Long id);
+
     BreachRule getActiveDefaultOrFirst();
 
     void deactivateRule(Long id);

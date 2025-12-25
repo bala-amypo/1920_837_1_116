@@ -18,22 +18,39 @@ public class BreachRuleServiceImpl implements BreachRuleService {
 
     @Override
     public BreachRule createRule(BreachRule rule) {
-        if (rule.getPenaltyPerDay() == null || rule.getPenaltyPerDay().signum() <= 0) {
-            throw new IllegalArgumentException("Penalty must be greater than zero");
-        }
         return breachRuleRepository.save(rule);
+    }
+
+    @Override
+    public BreachRule updateRule(Long id, BreachRule rule) {
+        BreachRule existing = getRuleById(id);
+        existing.setPenaltyPerDay(rule.getPenaltyPerDay());
+        existing.setMaxPenaltyPercentage(rule.getMaxPenaltyPercentage());
+        return breachRuleRepository.save(existing);
+    }
+
+    @Override
+    public BreachRule getRuleById(Long id) {
+        return breachRuleRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Rule not found"));
+    }
+
+    @Override
+    public BreachRule getActiveDefaultOrFirst() {
+        return breachRuleRepository
+                .findFirstByActiveTrueOrderByIsDefaultRuleDesc()
+                .orElseThrow(() -> new RuntimeException("No active breach rule"));
+    }
+
+    @Override
+    public void deactivateRule(Long id) {
+        BreachRule rule = getRuleById(id);
+        rule.setActive(false);
+        breachRuleRepository.save(rule);
     }
 
     @Override
     public List<BreachRule> getAllRules() {
         return breachRuleRepository.findAll();
     }
-    @Override
-public void deactivateRule(Long id) {
-    BreachRule rule = breachRuleRepository.findById(id)
-            .orElseThrow(() -> new RuntimeException("Rule not found"));
-    rule.setActive(false);
-    breachRuleRepository.save(rule);
-}
-
 }
