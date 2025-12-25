@@ -1,39 +1,16 @@
-package com.example.demo.service.impl;
-
-import com.example.demo.entity.Contract;
-import com.example.demo.repository.ContractRepository;
-import com.example.demo.repository.DeliveryRecordRepository;
-import com.example.demo.service.ContractService;
-import org.springframework.stereotype.Service;
-
-import java.util.List;
-
 @Service
 public class ContractServiceImpl implements ContractService {
 
-    private final ContractRepository contractRepository;
-    private final DeliveryRecordRepository deliveryRecordRepository;
+    private ContractRepository contractRepository;
+    private DeliveryRecordRepository deliveryRecordRepository;
 
-    public ContractServiceImpl() {
-        this.contractRepository = null;
-        this.deliveryRecordRepository = null;
-    }
+    // REQUIRED FOR TEST
+    public ContractServiceImpl() {}
 
-    public ContractServiceImpl(
-            ContractRepository contractRepository,
-            DeliveryRecordRepository deliveryRecordRepository) {
+    public ContractServiceImpl(ContractRepository contractRepository,
+                               DeliveryRecordRepository deliveryRecordRepository) {
         this.contractRepository = contractRepository;
         this.deliveryRecordRepository = deliveryRecordRepository;
-    }
-
-    @Override
-    public Contract createContract(Contract contract) {
-        return contractRepository.save(contract);
-    }
-
-    @Override
-    public List<Contract> getAllContracts() {
-        return contractRepository.findAll();
     }
 
     @Override
@@ -41,24 +18,9 @@ public class ContractServiceImpl implements ContractService {
         return contractRepository.findById(id).orElse(null);
     }
 
-    // 🔥 MISSING METHOD — NOW FIXED
     @Override
-    public Contract updateContract(Long id, Contract contract) {
-        Contract existing = contractRepository.findById(id).orElse(null);
-        if (existing != null) {
-            existing.setTitle(contract.getTitle());
-            existing.setCounterpartyName(contract.getCounterpartyName());
-            contractRepository.save(existing);
-        }
-        return existing;
-    }
-
-    @Override
-    public void updateContractStatus(Long id) {
-        Contract contract = contractRepository.findById(id).orElse(null);
-        if (contract != null) {
-            contract.setStatus("UPDATED");
-            contractRepository.save(contract);
-        }
+    public void updateContract(Long id, Contract contract) {
+        contract.setId(id);
+        contractRepository.save(contract);
     }
 }
