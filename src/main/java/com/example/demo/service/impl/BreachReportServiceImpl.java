@@ -1,14 +1,15 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.*;
+import com.example.demo.entity.BreachReport;
+import com.example.demo.entity.Contract;
+import com.example.demo.entity.PenaltyCalculation;
 import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.repository.*;
+import com.example.demo.repository.BreachReportRepository;
+import com.example.demo.repository.ContractRepository;
+import com.example.demo.repository.PenaltyCalculationRepository;
 import com.example.demo.service.BreachReportService;
 
 import java.util.List;
-import org.springframework.stereotype.Service;
-
-@Service
 
 public class BreachReportServiceImpl implements BreachReportService {
 
@@ -16,13 +17,14 @@ public class BreachReportServiceImpl implements BreachReportService {
     private PenaltyCalculationRepository penaltyCalculationRepository;
     private ContractRepository contractRepository;
 
-    public BreachReportServiceImpl() {}
+    // ✅ Required by TestNG (no-arg constructor)
+    public BreachReportServiceImpl() {
+    }
 
-    public BreachReportServiceImpl(
-            BreachReportRepository breachReportRepository,
-            PenaltyCalculationRepository penaltyCalculationRepository,
-            ContractRepository contractRepository) {
-
+    // ✅ Required by Spring
+    public BreachReportServiceImpl(BreachReportRepository breachReportRepository,
+                                   PenaltyCalculationRepository penaltyCalculationRepository,
+                                   ContractRepository contractRepository) {
         this.breachReportRepository = breachReportRepository;
         this.penaltyCalculationRepository = penaltyCalculationRepository;
         this.contractRepository = contractRepository;
@@ -35,13 +37,13 @@ public class BreachReportServiceImpl implements BreachReportService {
                 .orElseThrow(() -> new ResourceNotFoundException("Contract not found"));
 
         PenaltyCalculation calculation = penaltyCalculationRepository
-                .findTopByContractIdOrderByCalculatedAtDesc(contractId)
+                .findTopByContractIdOrderByIdDesc(contractId)
                 .orElseThrow(() -> new ResourceNotFoundException("No penalty calculation"));
 
         BreachReport report = BreachReport.builder()
                 .contract(contract)
                 .daysDelayed(calculation.getDaysDelayed())
-                .penaltyAmount(calculation.getCalculatedPenalty())
+                .penaltyAmount(calculation.getCalculatedPenalty().doubleValue()) // ✅ FIX
                 .build();
 
         return breachReportRepository.save(report);

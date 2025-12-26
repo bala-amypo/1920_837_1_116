@@ -13,11 +13,8 @@ public class BreachRuleServiceImpl implements BreachRuleService {
 
     private BreachRuleRepository breachRuleRepository;
 
-    // Required by tests
-    public BreachRuleServiceImpl() {
-    }
+    public BreachRuleServiceImpl() {}
 
-    // Required by Spring
     public BreachRuleServiceImpl(BreachRuleRepository breachRuleRepository) {
         this.breachRuleRepository = breachRuleRepository;
     }
@@ -43,25 +40,37 @@ public class BreachRuleServiceImpl implements BreachRuleService {
         return breachRuleRepository.save(rule);
     }
 
+    // ✅ REQUIRED BY INTERFACE
+    @Override
+    public BreachRule updateRule(Long id, BreachRule updated) {
+
+        BreachRule existing = breachRuleRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Rule not found"));
+
+        existing.setPenaltyPerDay(updated.getPenaltyPerDay());
+        existing.setMaxPenaltyPercentage(updated.getMaxPenaltyPercentage());
+        existing.setActive(updated.getActive());
+        existing.setIsDefaultRule(updated.getIsDefaultRule());
+
+        return breachRuleRepository.save(existing);
+    }
+
+    @Override
+    public BreachRule getActiveDefaultOrFirst() {
+        return breachRuleRepository
+                .findFirstByActiveTrueOrderByIsDefaultRuleDesc()
+                .orElseThrow(() -> new ResourceNotFoundException("No active rule"));
+    }
+
     @Override
     public List<BreachRule> getAllRules() {
         return breachRuleRepository.findAll();
     }
 
-    // ✅ MISSING METHOD — NOW IMPLEMENTED
-    @Override
-    public BreachRule getActiveDefaultOrFirst() {
-        return breachRuleRepository
-                .findFirstByActiveTrueOrderByIsDefaultRuleDesc()
-                .orElseThrow(() -> new ResourceNotFoundException("No active breach rule"));
-    }
-
     @Override
     public void deactivateRule(Long id) {
-
         BreachRule rule = breachRuleRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Rule not found"));
-
         rule.setActive(false);
         breachRuleRepository.save(rule);
     }

@@ -25,4 +25,7 @@ public class PenaltyCalculation {
 
     @ManyToOne
     private DeliveryRecord deliveryRecord;
+
+    @ManyToOne
+    private BreachRule breachRule;
 }
