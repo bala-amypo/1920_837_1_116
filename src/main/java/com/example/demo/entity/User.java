@@ -1,20 +1,22 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
 
 @Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class User {
+  @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
+  private String email;
+  private String password;
+  private String roles; // CSV
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  public User() {}
 
-    private String email;
-    private String password;
-    private String roles;
+  public Long getId() { return id; }
+  public String getEmail() { return email; }
+  public void setEmail(String e) { this.email = e; }
+  public String getPassword() { return password; }
+  public void setPassword(String p) { this.password = p; }
+  public String getRoles() { return roles; }
+  public void setRoles(String r) { this.roles = r; }
 }
