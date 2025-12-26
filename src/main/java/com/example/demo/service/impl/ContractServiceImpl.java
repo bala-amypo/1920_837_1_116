@@ -4,56 +4,48 @@ import com.example.demo.entity.Contract;
 import com.example.demo.exception.BadRequestException;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.ContractRepository;
-import com.example.demo.repository.DeliveryRecordRepository;
 import com.example.demo.service.ContractService;
-
-import java.time.LocalDate;
-import java.util.List;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 @Service
 public class ContractServiceImpl implements ContractService {
 
-    private ContractRepository contractRepository;
-    private DeliveryRecordRepository deliveryRecordRepository;
+    private final ContractRepository contractRepository;
 
-    // Required by tests
-    public ContractServiceImpl() {
-    }
-
-    // Required by Spring
-    public ContractServiceImpl(ContractRepository contractRepository,
-                               DeliveryRecordRepository deliveryRecordRepository) {
+    public ContractServiceImpl(ContractRepository contractRepository) {
         this.contractRepository = contractRepository;
-        this.deliveryRecordRepository = deliveryRecordRepository;
     }
 
     @Override
     public Contract createContract(Contract contract) {
 
-        if (contract.getBaseContractValue() == null ||
-                contract.getBaseContractValue().signum() <= 0) {
+        // ✅ primitive validation (NO null check)
+        if (contract.getBaseContractValue() <= 0) {
             throw new BadRequestException("Base contract value must be positive");
         }
 
-        contractRepository.findByContractNumber(contract.getContractNumber())
-                .ifPresent(c -> {
-                    throw new BadRequestException("Contract already exists");
-                });
+        if (contract.getAgreedDeliveryDate() == null) {
+            throw new BadRequestException("Agreed delivery date is required");
+        }
 
         return contractRepository.save(contract);
     }
 
-    // ✅ MISSING METHOD — FIXED
     @Override
-    public Contract updateContract(Long id, Contract updated) {
+    public Contract updateContract(Long id, Contract contract) {
 
         Contract existing = contractRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Contract not found"));
 
-        existing.setTitle(updated.getTitle());
-        existing.setCounterpartyName(updated.getCounterpartyName());
-        existing.setAgreedDeliveryDate(updated.getAgreedDeliveryDate());
-        existing.setBaseContractValue(updated.getBaseContractValue());
+        if (contract.getBaseContractValue() <= 0) {
+            throw new BadRequestException("Base contract value must be positive");
+        }
+
+        existing.setClientName(contract.getClientName());
+        existing.setBaseContractValue(contract.getBaseContractValue());
+        existing.setAgreedDeliveryDate(contract.getAgreedDeliveryDate());
 
         return contractRepository.save(existing);
     }
@@ -67,27 +59,5 @@ public class ContractServiceImpl implements ContractService {
     @Override
     public List<Contract> getAllContracts() {
         return contractRepository.findAll();
-    }
-
-    @Override
-    public void updateContractStatus(Long id) {
-
-        Contract c = getContractById(id);
-
-        deliveryRecordRepository
-                .findFirstByContractIdOrderByDeliveryDateDesc(id)
-                .ifPresentOrElse(dr -> {
-                    if (dr.getDeliveryDate().isAfter(c.getAgreedDeliveryDate())) {
-                        c.setStatus("BREACHED");
-                    } else {
-                        c.setStatus("COMPLETED");
-                    }
-                }, () -> {
-                    if (LocalDate.now().isBefore(c.getAgreedDeliveryDate())) {
-                        c.setStatus("ACTIVE");
-                    }
-                });
-
-        contractRepository.save(c);
     }
 }
