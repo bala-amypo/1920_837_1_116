@@ -9,16 +9,11 @@ import com.example.demo.service.ContractService;
 
 import java.time.LocalDate;
 import java.util.List;
-import org.springframework.stereotype.Service;
-
-@Service
 
 public class ContractServiceImpl implements ContractService {
 
-    private ContractRepository contractRepository;
-    private DeliveryRecordRepository deliveryRecordRepository;
-
-    public ContractServiceImpl() {}
+    private final ContractRepository contractRepository;
+    private final DeliveryRecordRepository deliveryRecordRepository;
 
     public ContractServiceImpl(ContractRepository contractRepository,
                                DeliveryRecordRepository deliveryRecordRepository) {
@@ -31,7 +26,7 @@ public class ContractServiceImpl implements ContractService {
 
         if (contract.getBaseContractValue() == null ||
                 contract.getBaseContractValue().signum() <= 0) {
-            throw new BadRequestException("Base contract value must be greater than zero");
+            throw new BadRequestException("Base contract value must be positive");
         }
 
         contractRepository.findByContractNumber(contract.getContractNumber())
@@ -44,14 +39,11 @@ public class ContractServiceImpl implements ContractService {
 
     @Override
     public Contract updateContract(Long id, Contract updated) {
-
         Contract existing = getContractById(id);
-
         existing.setTitle(updated.getTitle());
         existing.setCounterpartyName(updated.getCounterpartyName());
         existing.setAgreedDeliveryDate(updated.getAgreedDeliveryDate());
         existing.setBaseContractValue(updated.getBaseContractValue());
-
         return contractRepository.save(existing);
     }
 
@@ -68,25 +60,21 @@ public class ContractServiceImpl implements ContractService {
 
     @Override
     public void updateContractStatus(Long id) {
-
         Contract c = getContractById(id);
 
         deliveryRecordRepository
                 .findFirstByContractIdOrderByDeliveryDateDesc(id)
-                .ifPresentOrElse(
-                        dr -> {
-                            if (dr.getDeliveryDate().isAfter(c.getAgreedDeliveryDate())) {
-                                c.setStatus("BREACHED");
-                            } else {
-                                c.setStatus("COMPLETED");
-                            }
-                        },
-                        () -> {
-                            if (LocalDate.now().isBefore(c.getAgreedDeliveryDate())) {
-                                c.setStatus("ACTIVE");
-                            }
-                        }
-                );
+                .ifPresentOrElse(dr -> {
+                    if (dr.getDeliveryDate().isAfter(c.getAgreedDeliveryDate())) {
+                        c.setStatus("BREACHED");
+                    } else {
+                        c.setStatus("COMPLETED");
+                    }
+                }, () -> {
+                    if (LocalDate.now().isBefore(c.getAgreedDeliveryDate())) {
+                        c.setStatus("ACTIVE");
+                    }
+                });
 
         contractRepository.save(c);
     }

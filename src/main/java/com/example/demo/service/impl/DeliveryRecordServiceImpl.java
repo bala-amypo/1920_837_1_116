@@ -10,16 +10,11 @@ import com.example.demo.service.DeliveryRecordService;
 
 import java.time.LocalDate;
 import java.util.List;
-import org.springframework.stereotype.Service;
-
-@Service
 
 public class DeliveryRecordServiceImpl implements DeliveryRecordService {
 
-    private DeliveryRecordRepository deliveryRecordRepository;
-    private ContractRepository contractRepository;
-
-    public DeliveryRecordServiceImpl() {}
+    private final DeliveryRecordRepository deliveryRecordRepository;
+    private final ContractRepository contractRepository;
 
     public DeliveryRecordServiceImpl(DeliveryRecordRepository deliveryRecordRepository,
                                      ContractRepository contractRepository) {
@@ -31,7 +26,7 @@ public class DeliveryRecordServiceImpl implements DeliveryRecordService {
     public DeliveryRecord createDeliveryRecord(DeliveryRecord record) {
 
         if (record.getDeliveryDate().isAfter(LocalDate.now())) {
-            throw new BadRequestException("Delivery date cannot be in the future");
+            throw new BadRequestException("future delivery date not allowed");
         }
 
         Contract contract = contractRepository.findById(record.getContract().getId())
