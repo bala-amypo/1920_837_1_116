@@ -1,22 +1,15 @@
-package com.example.demo.entity;
-
-import jakarta.persistence.*;
-import lombok.*;
+import java.math.BigDecimal;
 
 @Entity
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class PenaltyCalculation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private int daysDelayed;
+    private Integer daysDelayed;
 
-    private double calculatedPenalty;
+    private BigDecimal calculatedPenalty;
 
     @ManyToOne
     private Contract contract;
@@ -26,4 +19,6 @@ public class PenaltyCalculation {
 
     @ManyToOne
     private BreachRule breachRule;
+
+    // getters and setters
 }

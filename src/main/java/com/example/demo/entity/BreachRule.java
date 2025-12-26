@@ -1,30 +1,19 @@
-package com.example.demo.entity;
-
-import jakarta.persistence.*;
-import lombok.*;
+import java.math.BigDecimal;
 
 @Entity
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class BreachRule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String ruleName;
+    private BigDecimal penaltyPerDay;
 
-    // ✅ TEST EXPECTS double
-    private double penaltyPerDay;
+    private Integer maxPenaltyPercentage;
 
-    // ✅ TEST EXPECTS int
-    private int maxPenaltyPercentage;
+    private Boolean active;
 
-    @Builder.Default
-    private Boolean active = true;
+    private Boolean isDefaultRule;
 
-    @Builder.Default
-    private Boolean isDefaultRule = false;
+    // getters and setters
 }
