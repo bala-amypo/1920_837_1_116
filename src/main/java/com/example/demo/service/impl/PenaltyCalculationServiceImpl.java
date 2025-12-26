@@ -13,6 +13,7 @@ import com.example.demo.service.PenaltyCalculationService;
 import org.springframework.stereotype.Service;
 
 import java.time.temporal.ChronoUnit;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -49,20 +50,20 @@ public class PenaltyCalculationServiceImpl implements PenaltyCalculationService 
                 .findFirstByActiveTrueOrderByIsDefaultRuleDesc()
                 .orElseThrow(() -> new ResourceNotFoundException("Breach rule not found"));
 
-        long delayedDaysLong = ChronoUnit.DAYS.between(
+        long delay = ChronoUnit.DAYS.between(
                 contract.getAgreedDeliveryDate(),
                 record.getDeliveryDate()
         );
 
-        int daysDelayed = delayedDaysLong > 0 ? (int) delayedDaysLong : 0;
+        int daysDelayed = delay > 0 ? (int) delay : 0;
 
         double penalty = daysDelayed * rule.getPenaltyPerDay();
 
-        double maxAllowedPenalty =
+        double maxAllowed =
                 (contract.getBaseContractValue() * rule.getMaxPenaltyPercentage()) / 100.0;
 
-        if (penalty > maxAllowedPenalty) {
-            penalty = maxAllowedPenalty;
+        if (penalty > maxAllowed) {
+            penalty = maxAllowed;
         }
 
         PenaltyCalculation calculation = PenaltyCalculation.builder()
@@ -79,5 +80,13 @@ public class PenaltyCalculationServiceImpl implements PenaltyCalculationService 
     @Override
     public List<PenaltyCalculation> getCalculationsForContract(Long contractId) {
         return penaltyCalculationRepository.findByContractId(contractId);
+    }
+
+    // ✅ EXTRA METHOD — fixes "does not override abstract method"
+    public PenaltyCalculation getLatestCalculation(Long contractId) {
+        return penaltyCalculationRepository.findByContractId(contractId)
+                .stream()
+                .max(Comparator.comparing(PenaltyCalculation::getId))
+                .orElseThrow(() -> new ResourceNotFoundException("No calculation found"));
     }
 }
