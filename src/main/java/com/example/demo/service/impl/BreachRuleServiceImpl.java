@@ -8,15 +8,10 @@ import com.example.demo.service.BreachRuleService;
 
 import java.math.BigDecimal;
 import java.util.List;
-import org.springframework.stereotype.Service;
-
-@Service
 
 public class BreachRuleServiceImpl implements BreachRuleService {
 
-    private BreachRuleRepository breachRuleRepository;
-
-    public BreachRuleServiceImpl() {}
+    private final BreachRuleRepository breachRuleRepository;
 
     public BreachRuleServiceImpl(BreachRuleRepository breachRuleRepository) {
         this.breachRuleRepository = breachRuleRepository;
@@ -27,17 +22,17 @@ public class BreachRuleServiceImpl implements BreachRuleService {
 
         if (rule.getPenaltyPerDay() == null ||
                 rule.getPenaltyPerDay().compareTo(BigDecimal.ZERO) <= 0) {
-            throw new BadRequestException("Invalid penalty");
+            throw new BadRequestException("penalty must be positive");
         }
 
         if (rule.getMaxPenaltyPercentage() < 0 ||
                 rule.getMaxPenaltyPercentage() > 100) {
-            throw new BadRequestException("Invalid percentage");
+            throw new BadRequestException("percentage out of bounds");
         }
 
         breachRuleRepository.findByRuleName(rule.getRuleName())
                 .ifPresent(r -> {
-                    throw new BadRequestException("Rule already exists");
+                    throw new BadRequestException("rule already exists");
                 });
 
         return breachRuleRepository.save(rule);
@@ -45,7 +40,6 @@ public class BreachRuleServiceImpl implements BreachRuleService {
 
     @Override
     public BreachRule updateRule(Long id, BreachRule rule) {
-
         BreachRule existing = breachRuleRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Rule not found"));
 
@@ -61,7 +55,7 @@ public class BreachRuleServiceImpl implements BreachRuleService {
     public BreachRule getActiveDefaultOrFirst() {
         return breachRuleRepository
                 .findFirstByActiveTrueOrderByIsDefaultRuleDesc()
-                .orElseThrow(() -> new ResourceNotFoundException("No active breach rule"));
+                .orElseThrow(() -> new ResourceNotFoundException("No active rule"));
     }
 
     @Override
@@ -71,10 +65,8 @@ public class BreachRuleServiceImpl implements BreachRuleService {
 
     @Override
     public void deactivateRule(Long id) {
-
         BreachRule rule = breachRuleRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Rule not found"));
-
         rule.setActive(false);
         breachRuleRepository.save(rule);
     }

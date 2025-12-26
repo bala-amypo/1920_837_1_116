@@ -9,8 +9,8 @@ import java.util.stream.Collectors;
 
 public class JwtTokenProvider {
 
-    private String jwtSecret;
-    private Long jwtExpirationMs;
+    private final String jwtSecret = "super-secret-key-super-secret-key";
+    private final long jwtExpirationMs = 3600000;
 
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes());
@@ -18,12 +18,10 @@ public class JwtTokenProvider {
 
     public String generateToken(Long userId, String email, Set<String> roles) {
 
-        String rolesCsv = String.join(",", roles);
-
         Map<String, Object> claims = new HashMap<>();
         claims.put("userId", userId);
         claims.put("email", email);
-        claims.put("roles", rolesCsv);
+        claims.put("roles", String.join(",", roles));
 
         Date now = new Date();
         Date expiry = new Date(now.getTime() + jwtExpirationMs);
@@ -45,21 +43,24 @@ public class JwtTokenProvider {
                 .getBody();
     }
 
-    public String getUsername(String token) {
-        return getClaims(token).getSubject();
+    public Long getUserId(String token) {
+        return getClaims(token).get("userId", Long.class);
     }
 
-    public Set<String> getRole(String token) {
-        String roles = (String) getClaims(token).get("roles");
-        return Arrays.stream(roles.split(","))
-                .collect(Collectors.toSet());
+    public String getEmail(String token) {
+        return getClaims(token).get("email", String.class);
+    }
+
+    public Set<String> getRoles(String token) {
+        String csv = getClaims(token).get("roles", String.class);
+        return Arrays.stream(csv.split(",")).collect(Collectors.toSet());
     }
 
     public boolean validateToken(String token) {
         try {
             getClaims(token);
             return true;
-        } catch (JwtException | IllegalArgumentException ex) {
+        } catch (Exception e) {
             return false;
         }
     }
