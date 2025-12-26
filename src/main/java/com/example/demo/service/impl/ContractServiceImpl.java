@@ -21,13 +21,17 @@ public class ContractServiceImpl implements ContractService {
     @Override
     public Contract createContract(Contract contract) {
 
-        // ✅ primitive validation (NO null check)
         if (contract.getBaseContractValue() <= 0) {
             throw new BadRequestException("Base contract value must be positive");
         }
 
         if (contract.getAgreedDeliveryDate() == null) {
             throw new BadRequestException("Agreed delivery date is required");
+        }
+
+        // default status if not set
+        if (contract.getStatus() == null) {
+            contract.setStatus("ACTIVE");
         }
 
         return contractRepository.save(contract);
@@ -43,11 +47,21 @@ public class ContractServiceImpl implements ContractService {
             throw new BadRequestException("Base contract value must be positive");
         }
 
-        existing.setClientName(contract.getClientName());
         existing.setBaseContractValue(contract.getBaseContractValue());
         existing.setAgreedDeliveryDate(contract.getAgreedDeliveryDate());
 
         return contractRepository.save(existing);
+    }
+
+    // ✅ REQUIRED BY INTERFACE
+    @Override
+    public void updateContractStatus(Long contractId) {
+
+        Contract contract = contractRepository.findById(contractId)
+                .orElseThrow(() -> new ResourceNotFoundException("Contract not found"));
+
+        contract.setStatus("COMPLETED");
+        contractRepository.save(contract);
     }
 
     @Override
