@@ -84,4 +84,10 @@ public class PenaltyCalculationServiceImpl implements PenaltyCalculationService 
     public List<PenaltyCalculation> getCalculationsForContract(Long contractId) {
         return penaltyCalculationRepository.findByContractId(contractId);
     }
+    @Override
+public PenaltyCalculation getCalculationById(Long id) {
+    return penaltyCalculationRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Calculation not found"));
+}
+
 }

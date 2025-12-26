@@ -2,25 +2,47 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
-import lombok.*;
 
 @Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class Contract {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String contractName;
+    private double baseContractValue;
 
-    private LocalDate startDate;
-    private LocalDate endDate;
+    private LocalDate agreedDeliveryDate;
 
-    private Double contractValue;
+    private String status;
 
-    private Boolean active = true;
+    public Contract() {}
+
+    public Long getId() {
+        return id;
+    }
+
+    public double getBaseContractValue() {
+        return baseContractValue;
+    }
+
+    public void setBaseContractValue(double baseContractValue) {
+        this.baseContractValue = baseContractValue;
+    }
+
+    public LocalDate getAgreedDeliveryDate() {
+        return agreedDeliveryDate;
+    }
+
+    public void setAgreedDeliveryDate(LocalDate agreedDeliveryDate) {
+        this.agreedDeliveryDate = agreedDeliveryDate;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }
