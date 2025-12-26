@@ -8,6 +8,9 @@ import com.example.demo.service.PenaltyCalculationService;
 import java.math.BigDecimal;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import org.springframework.stereotype.Service;
+
+@Service
 
 public class PenaltyCalculationServiceImpl implements PenaltyCalculationService {
 
@@ -61,7 +64,7 @@ public class PenaltyCalculationServiceImpl implements PenaltyCalculationService 
             penalty = maxPenalty;
         }
 
-        PenaltyCalculation calc = PenaltyCalculation.builder()
+        PenaltyCalculation calculation = PenaltyCalculation.builder()
                 .contract(contract)
                 .deliveryRecord(record)
                 .breachRule(rule)
@@ -69,7 +72,7 @@ public class PenaltyCalculationServiceImpl implements PenaltyCalculationService 
                 .calculatedPenalty(penalty)
                 .build();
 
-        return penaltyCalculationRepository.save(calc);
+        return penaltyCalculationRepository.save(calculation);
     }
 
     @Override

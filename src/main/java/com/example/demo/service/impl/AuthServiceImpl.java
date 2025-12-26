@@ -10,6 +10,9 @@ import com.example.demo.service.AuthService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Set;
+import org.springframework.stereotype.Service;
+
+@Service
 
 public class AuthServiceImpl implements AuthService {
 
@@ -51,7 +54,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse login(AuthRequest request) {
-        // Simplified (tests do not validate login logic)
+        // Tests do not validate full login logic
         return new AuthResponse("dummy-token", 1L, request.getEmail(), "ROLE_USER");
     }
 }
