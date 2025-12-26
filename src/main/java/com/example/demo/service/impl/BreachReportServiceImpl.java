@@ -8,10 +8,12 @@ import com.example.demo.repository.BreachReportRepository;
 import com.example.demo.repository.ContractRepository;
 import com.example.demo.repository.PenaltyCalculationRepository;
 import com.example.demo.service.BreachReportService;
+import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
 import java.util.List;
 
+@Service
 public class BreachReportServiceImpl implements BreachReportService {
 
     private BreachReportRepository breachReportRepository;
@@ -44,17 +46,14 @@ public class BreachReportServiceImpl implements BreachReportService {
             throw new ResourceNotFoundException("No penalty calculation");
         }
 
-        // Get latest calculation safely
-        PenaltyCalculation latestCalculation = calculations.stream()
+        PenaltyCalculation latest = calculations.stream()
                 .max(Comparator.comparing(PenaltyCalculation::getId))
                 .orElseThrow(() -> new ResourceNotFoundException("No penalty calculation"));
 
         BreachReport report = BreachReport.builder()
                 .contract(contract)
-                .daysDelayed(latestCalculation.getDaysDelayed())
-                .penaltyAmount(
-                        latestCalculation.getCalculatedPenalty().doubleValue()
-                )
+                .daysDelayed(latest.getDaysDelayed())
+                .penaltyAmount(latest.getCalculatedPenalty().doubleValue())
                 .build();
 
         return breachReportRepository.save(report);
