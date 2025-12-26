@@ -1,68 +1,52 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.Contract;
+import com.example.demo.entity.DeliveryRecord;
 import com.example.demo.exception.BadRequestException;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.ContractRepository;
+import com.example.demo.repository.DeliveryRecordRepository;
 import com.example.demo.service.ContractService;
-import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
-@Service
 public class ContractServiceImpl implements ContractService {
 
     private ContractRepository contractRepository;
+    private DeliveryRecordRepository deliveryRecordRepository;
 
-    // REQUIRED (tests use new ContractServiceImpl())
     public ContractServiceImpl() {}
 
-    public ContractServiceImpl(ContractRepository contractRepository) {
+    public ContractServiceImpl(ContractRepository contractRepository,
+                               DeliveryRecordRepository deliveryRecordRepository) {
         this.contractRepository = contractRepository;
+        this.deliveryRecordRepository = deliveryRecordRepository;
     }
 
     @Override
     public Contract createContract(Contract contract) {
-
-        if (contract.getBaseContractValue() <= 0) {
-            throw new BadRequestException("Base contract value must be positive");
+        if (contract.getBaseContractValue() == null ||
+            contract.getBaseContractValue().signum() <= 0) {
+            throw new BadRequestException("Base contract value must be greater than zero");
         }
 
-        if (contract.getAgreedDeliveryDate() == null) {
-            throw new BadRequestException("Agreed delivery date is required");
-        }
-
-        if (contract.getStatus() == null) {
-            contract.setStatus("ACTIVE");
-        }
+        contractRepository.findByContractNumber(contract.getContractNumber())
+                .ifPresent(c -> { throw new BadRequestException("Contract already exists"); });
 
         return contractRepository.save(contract);
     }
 
     @Override
-    public Contract updateContract(Long id, Contract contract) {
+    public Contract updateContract(Long id, Contract updated) {
+        Contract existing = getContractById(id);
 
-        Contract existing = contractRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Contract not found"));
-
-        if (contract.getBaseContractValue() <= 0) {
-            throw new BadRequestException("Base contract value must be positive");
-        }
-
-        existing.setBaseContractValue(contract.getBaseContractValue());
-        existing.setAgreedDeliveryDate(contract.getAgreedDeliveryDate());
+        existing.setTitle(updated.getTitle());
+        existing.setCounterpartyName(updated.getCounterpartyName());
+        existing.setAgreedDeliveryDate(updated.getAgreedDeliveryDate());
+        existing.setBaseContractValue(updated.getBaseContractValue());
 
         return contractRepository.save(existing);
-    }
-
-    @Override
-    public void updateContractStatus(Long contractId) {
-
-        Contract contract = contractRepository.findById(contractId)
-                .orElseThrow(() -> new ResourceNotFoundException("Contract not found"));
-
-        contract.setStatus("COMPLETED");
-        contractRepository.save(contract);
     }
 
     @Override
@@ -74,5 +58,26 @@ public class ContractServiceImpl implements ContractService {
     @Override
     public List<Contract> getAllContracts() {
         return contractRepository.findAll();
+    }
+
+    @Override
+    public void updateContractStatus(Long id) {
+        Contract c = getContractById(id);
+
+        deliveryRecordRepository
+                .findFirstByContractIdOrderByDeliveryDateDesc(id)
+                .ifPresentOrElse(dr -> {
+                    if (dr.getDeliveryDate().isAfter(c.getAgreedDeliveryDate())) {
+                        c.setStatus("BREACHED");
+                    } else {
+                        c.setStatus("COMPLETED");
+                    }
+                }, () -> {
+                    if (LocalDate.now().isBefore(c.getAgreedDeliveryDate())) {
+                        c.setStatus("ACTIVE");
+                    }
+                });
+
+        contractRepository.save(c);
     }
 }

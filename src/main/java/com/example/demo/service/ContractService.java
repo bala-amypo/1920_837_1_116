@@ -1,6 +1,7 @@
 package com.example.demo.service;
 
 import com.example.demo.entity.Contract;
+
 import java.util.List;
 
 public interface ContractService {
@@ -9,9 +10,9 @@ public interface ContractService {
 
     Contract updateContract(Long id, Contract contract);
 
-    void updateContractStatus(Long contractId);
-
     Contract getContractById(Long id);
 
     List<Contract> getAllContracts();
+
+    void updateContractStatus(Long id);
 }

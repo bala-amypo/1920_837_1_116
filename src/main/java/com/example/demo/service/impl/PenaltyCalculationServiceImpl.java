@@ -4,12 +4,11 @@ import com.example.demo.entity.*;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.*;
 import com.example.demo.service.PenaltyCalculationService;
-import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
-@Service
 public class PenaltyCalculationServiceImpl implements PenaltyCalculationService {
 
     private PenaltyCalculationRepository penaltyCalculationRepository;
@@ -20,15 +19,15 @@ public class PenaltyCalculationServiceImpl implements PenaltyCalculationService 
     public PenaltyCalculationServiceImpl() {}
 
     public PenaltyCalculationServiceImpl(
-            PenaltyCalculationRepository p,
-            ContractRepository c,
-            DeliveryRecordRepository d,
-            BreachRuleRepository b) {
+            PenaltyCalculationRepository penaltyCalculationRepository,
+            ContractRepository contractRepository,
+            DeliveryRecordRepository deliveryRecordRepository,
+            BreachRuleRepository breachRuleRepository) {
 
-        this.penaltyCalculationRepository = p;
-        this.contractRepository = c;
-        this.deliveryRecordRepository = d;
-        this.breachRuleRepository = b;
+        this.penaltyCalculationRepository = penaltyCalculationRepository;
+        this.contractRepository = contractRepository;
+        this.deliveryRecordRepository = deliveryRecordRepository;
+        this.breachRuleRepository = breachRuleRepository;
     }
 
     @Override
@@ -39,45 +38,48 @@ public class PenaltyCalculationServiceImpl implements PenaltyCalculationService 
 
         DeliveryRecord record = deliveryRecordRepository
                 .findFirstByContractIdOrderByDeliveryDateDesc(contractId)
-                .orElseThrow(() -> new ResourceNotFoundException("Delivery record not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("No delivery record"));
 
         BreachRule rule = breachRuleRepository
                 .findFirstByActiveTrueOrderByIsDefaultRuleDesc()
-                .orElseThrow(() -> new ResourceNotFoundException("Rule not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("No active breach rule"));
 
-        long diff = ChronoUnit.DAYS.between(
+        long days = ChronoUnit.DAYS.between(
                 contract.getAgreedDeliveryDate(),
-                record.getDeliveryDate()
-        );
+                record.getDeliveryDate());
 
-        int daysDelayed = diff > 0 ? (int) diff : 0;
+        int daysDelayed = Math.max(0, (int) days);
 
-        double penalty = daysDelayed * rule.getPenaltyPerDay();
-        double maxPenalty =
-                (contract.getBaseContractValue() * rule.getMaxPenaltyPercentage()) / 100.0;
+        BigDecimal penalty = rule.getPenaltyPerDay()
+                .multiply(BigDecimal.valueOf(daysDelayed));
 
-        if (penalty > maxPenalty) {
+        BigDecimal maxPenalty =
+                contract.getBaseContractValue()
+                        .multiply(BigDecimal.valueOf(rule.getMaxPenaltyPercentage() / 100));
+
+        if (penalty.compareTo(maxPenalty) > 0) {
             penalty = maxPenalty;
         }
 
-        PenaltyCalculation pc = new PenaltyCalculation();
-        pc.setContract(contract);
-        pc.setDeliveryRecord(record);
-        pc.setBreachRule(rule);
-        pc.setDaysDelayed(daysDelayed);
-        pc.setCalculatedPenalty(penalty);
+        PenaltyCalculation calc = PenaltyCalculation.builder()
+                .contract(contract)
+                .deliveryRecord(record)
+                .breachRule(rule)
+                .daysDelayed(daysDelayed)
+                .calculatedPenalty(penalty)
+                .build();
 
-        return penaltyCalculationRepository.save(pc);
-    }
-
-    @Override
-    public List<PenaltyCalculation> getCalculationsForContract(Long contractId) {
-        return penaltyCalculationRepository.findByContractId(contractId);
+        return penaltyCalculationRepository.save(calc);
     }
 
     @Override
     public PenaltyCalculation getCalculationById(Long id) {
         return penaltyCalculationRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Calculation not found"));
+    }
+
+    @Override
+    public List<PenaltyCalculation> getCalculationsForContract(Long contractId) {
+        return penaltyCalculationRepository.findByContractId(contractId);
     }
 }
