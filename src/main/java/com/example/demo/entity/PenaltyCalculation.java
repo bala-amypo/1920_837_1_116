@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -28,4 +29,7 @@ public class PenaltyCalculation {
 
     @ManyToOne
     private BreachRule breachRule;
+
+    // ✅ REQUIRED for repository method
+    private LocalDateTime calculatedAt;
 }
