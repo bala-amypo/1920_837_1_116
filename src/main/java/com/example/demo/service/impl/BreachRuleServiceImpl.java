@@ -11,8 +11,14 @@ import java.util.List;
 
 public class BreachRuleServiceImpl implements BreachRuleService {
 
-    private final BreachRuleRepository breachRuleRepository;
+    private BreachRuleRepository breachRuleRepository;
 
+    // ✅ REQUIRED by TestNG tests
+    public BreachRuleServiceImpl() {
+        this.breachRuleRepository = null;
+    }
+
+    // ✅ REQUIRED by Spring
     public BreachRuleServiceImpl(BreachRuleRepository breachRuleRepository) {
         this.breachRuleRepository = breachRuleRepository;
     }
@@ -39,35 +45,7 @@ public class BreachRuleServiceImpl implements BreachRuleService {
     }
 
     @Override
-    public BreachRule updateRule(Long id, BreachRule rule) {
-        BreachRule existing = breachRuleRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Rule not found"));
-
-        existing.setPenaltyPerDay(rule.getPenaltyPerDay());
-        existing.setMaxPenaltyPercentage(rule.getMaxPenaltyPercentage());
-        existing.setActive(rule.getActive());
-        existing.setIsDefaultRule(rule.getIsDefaultRule());
-
-        return breachRuleRepository.save(existing);
-    }
-
-    @Override
-    public BreachRule getActiveDefaultOrFirst() {
-        return breachRuleRepository
-                .findFirstByActiveTrueOrderByIsDefaultRuleDesc()
-                .orElseThrow(() -> new ResourceNotFoundException("No active rule"));
-    }
-
-    @Override
     public List<BreachRule> getAllRules() {
         return breachRuleRepository.findAll();
-    }
-
-    @Override
-    public void deactivateRule(Long id) {
-        BreachRule rule = breachRuleRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Rule not found"));
-        rule.setActive(false);
-        breachRuleRepository.save(rule);
     }
 }

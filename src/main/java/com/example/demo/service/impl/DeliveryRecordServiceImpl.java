@@ -13,9 +13,14 @@ import java.util.List;
 
 public class DeliveryRecordServiceImpl implements DeliveryRecordService {
 
-    private final DeliveryRecordRepository deliveryRecordRepository;
-    private final ContractRepository contractRepository;
+    private DeliveryRecordRepository deliveryRecordRepository;
+    private ContractRepository contractRepository;
 
+    // Required by tests
+    public DeliveryRecordServiceImpl() {
+    }
+
+    // Required by Spring
     public DeliveryRecordServiceImpl(DeliveryRecordRepository deliveryRecordRepository,
                                      ContractRepository contractRepository) {
         this.deliveryRecordRepository = deliveryRecordRepository;
@@ -47,6 +52,7 @@ public class DeliveryRecordServiceImpl implements DeliveryRecordService {
         return deliveryRecordRepository.findByContractIdOrderByDeliveryDateAsc(contractId);
     }
 
+    // ✅ MISSING METHOD — FIXED
     @Override
     public DeliveryRecord getLatestDeliveryRecord(Long contractId) {
         return deliveryRecordRepository
