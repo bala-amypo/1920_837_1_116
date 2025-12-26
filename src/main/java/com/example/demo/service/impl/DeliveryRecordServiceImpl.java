@@ -10,7 +10,8 @@ import com.example.demo.service.DeliveryRecordService;
 
 import java.time.LocalDate;
 import java.util.List;
-
+import org.springframework.stereotype.Service;
+@Service
 public class DeliveryRecordServiceImpl implements DeliveryRecordService {
 
     private DeliveryRecordRepository deliveryRecordRepository;
