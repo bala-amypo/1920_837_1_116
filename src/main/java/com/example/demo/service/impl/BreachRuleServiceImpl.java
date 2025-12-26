@@ -8,7 +8,9 @@ import com.example.demo.service.BreachRuleService;
 
 import java.math.BigDecimal;
 import java.util.List;
+import org.springframework.stereotype.Service;
 
+@Service
 public class BreachRuleServiceImpl implements BreachRuleService {
 
     private BreachRuleRepository breachRuleRepository;

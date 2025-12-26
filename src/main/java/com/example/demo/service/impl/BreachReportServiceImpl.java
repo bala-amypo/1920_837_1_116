@@ -6,6 +6,9 @@ import com.example.demo.repository.*;
 import com.example.demo.service.BreachReportService;
 
 import java.util.List;
+import org.springframework.stereotype.Service;
+
+@Service
 
 public class BreachReportServiceImpl implements BreachReportService {
 
@@ -31,14 +34,14 @@ public class BreachReportServiceImpl implements BreachReportService {
         Contract contract = contractRepository.findById(contractId)
                 .orElseThrow(() -> new ResourceNotFoundException("Contract not found"));
 
-        PenaltyCalculation calc = penaltyCalculationRepository
+        PenaltyCalculation calculation = penaltyCalculationRepository
                 .findTopByContractIdOrderByCalculatedAtDesc(contractId)
                 .orElseThrow(() -> new ResourceNotFoundException("No penalty calculation"));
 
         BreachReport report = BreachReport.builder()
                 .contract(contract)
-                .daysDelayed(calc.getDaysDelayed())
-                .penaltyAmount(calc.getCalculatedPenalty())
+                .daysDelayed(calculation.getDaysDelayed())
+                .penaltyAmount(calculation.getCalculatedPenalty())
                 .build();
 
         return breachReportRepository.save(report);

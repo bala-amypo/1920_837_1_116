@@ -9,7 +9,9 @@ import com.example.demo.service.ContractService;
 
 import java.time.LocalDate;
 import java.util.List;
+import org.springframework.stereotype.Service;
 
+@Service
 public class ContractServiceImpl implements ContractService {
 
     private ContractRepository contractRepository;
