@@ -1,19 +1,12 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.BreachRule;
-import com.example.demo.entity.Contract;
-import com.example.demo.entity.DeliveryRecord;
-import com.example.demo.entity.PenaltyCalculation;
+import com.example.demo.entity.*;
 import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.repository.BreachRuleRepository;
-import com.example.demo.repository.ContractRepository;
-import com.example.demo.repository.DeliveryRecordRepository;
-import com.example.demo.repository.PenaltyCalculationRepository;
+import com.example.demo.repository.*;
 import com.example.demo.service.PenaltyCalculationService;
 import org.springframework.stereotype.Service;
 
 import java.time.temporal.ChronoUnit;
-import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -48,22 +41,22 @@ public class PenaltyCalculationServiceImpl implements PenaltyCalculationService 
 
         BreachRule rule = breachRuleRepository
                 .findFirstByActiveTrueOrderByIsDefaultRuleDesc()
-                .orElseThrow(() -> new ResourceNotFoundException("Breach rule not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Rule not found"));
 
-        long delay = ChronoUnit.DAYS.between(
+        long diff = ChronoUnit.DAYS.between(
                 contract.getAgreedDeliveryDate(),
                 record.getDeliveryDate()
         );
 
-        int daysDelayed = delay > 0 ? (int) delay : 0;
+        int daysDelayed = diff > 0 ? (int) diff : 0;
 
         double penalty = daysDelayed * rule.getPenaltyPerDay();
 
-        double maxAllowed =
+        double maxPenalty =
                 (contract.getBaseContractValue() * rule.getMaxPenaltyPercentage()) / 100.0;
 
-        if (penalty > maxAllowed) {
-            penalty = maxAllowed;
+        if (penalty > maxPenalty) {
+            penalty = maxPenalty;
         }
 
         PenaltyCalculation calculation = PenaltyCalculation.builder()
@@ -80,13 +73,5 @@ public class PenaltyCalculationServiceImpl implements PenaltyCalculationService 
     @Override
     public List<PenaltyCalculation> getCalculationsForContract(Long contractId) {
         return penaltyCalculationRepository.findByContractId(contractId);
-    }
-
-    // ✅ EXTRA METHOD — fixes "does not override abstract method"
-    public PenaltyCalculation getLatestCalculation(Long contractId) {
-        return penaltyCalculationRepository.findByContractId(contractId)
-                .stream()
-                .max(Comparator.comparing(PenaltyCalculation::getId))
-                .orElseThrow(() -> new ResourceNotFoundException("No calculation found"));
     }
 }

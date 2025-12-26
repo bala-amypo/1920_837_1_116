@@ -14,10 +14,8 @@ public class PenaltyCalculation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // ✅ TEST EXPECTS int
     private int daysDelayed;
 
-    // ✅ TEST EXPECTS double
     private double calculatedPenalty;
 
     @ManyToOne
