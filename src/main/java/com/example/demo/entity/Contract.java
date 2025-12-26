@@ -3,6 +3,9 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
 @Entity
 @Getter
 @Setter
@@ -15,5 +18,11 @@ public class Contract {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String status;
+    private String contractNumber;
+
+    private String title;
+
+    private BigDecimal baseContractValue;
+
+    private LocalDate agreedDeliveryDate;
 }

@@ -3,6 +3,8 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Entity
 @Getter
 @Setter
@@ -17,4 +19,6 @@ public class DeliveryRecord {
 
     @ManyToOne
     private Contract contract;
+
+    private LocalDate deliveryDate;
 }

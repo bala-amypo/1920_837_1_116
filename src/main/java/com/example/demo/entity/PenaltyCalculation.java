@@ -3,6 +3,9 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
 @Entity
 @Getter
 @Setter
@@ -18,5 +21,9 @@ public class PenaltyCalculation {
     @ManyToOne
     private Contract contract;
 
-    private Double penaltyAmount;
+    private int daysDelayed;
+
+    private BigDecimal calculatedPenalty;
+
+    private LocalDate calculatedDate;
 }
