@@ -2,6 +2,7 @@ package com.example.demo.security;
 
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -11,13 +12,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
     private final UserRepository userRepository;
-
-    public CustomUserDetailsService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
 
     @Override
     public UserDetails loadUserByUsername(String email)
@@ -25,15 +23,17 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() ->
-                        new UsernameNotFoundException("user not found"));
+                        new UsernameNotFoundException(
+                                "User not found with email: " + email));
+
+        // IMPORTANT: boolean field → use isActive(), NOT getActive()
+        if (!user.isActive()) {
+            throw new UsernameNotFoundException("User account is inactive");
+        }
 
         return new org.springframework.security.core.userdetails.User(
                 user.getEmail(),
                 user.getPassword(),
-                user.getActive(),
-                true,
-                true,
-                true,
                 List.of(new SimpleGrantedAuthority(user.getRole()))
         );
     }
