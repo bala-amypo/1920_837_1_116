@@ -1,61 +1,61 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.Contract;
-import com.example.demo.entity.DeliveryRecord;
+import com.example.demo.entity.BreachRule;
 import com.example.demo.exception.BadRequestException;
 import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.repository.ContractRepository;
-import com.example.demo.repository.DeliveryRecordRepository;
-import com.example.demo.service.DeliveryRecordService;
+import com.example.demo.repository.BreachRuleRepository;
+import com.example.demo.service.BreachRuleService;
 
-import java.time.LocalDate;
+import java.math.BigDecimal;
 import java.util.List;
 
-public class DeliveryRecordServiceImpl implements DeliveryRecordService {
+public class BreachRuleServiceImpl implements BreachRuleService {
 
-    private DeliveryRecordRepository deliveryRecordRepository;
-    private ContractRepository contractRepository;
+    private BreachRuleRepository breachRuleRepository;
 
     // Required by tests
-    public DeliveryRecordServiceImpl() {
+    public BreachRuleServiceImpl() {
     }
 
     // Required by Spring
-    public DeliveryRecordServiceImpl(DeliveryRecordRepository deliveryRecordRepository,
-                                     ContractRepository contractRepository) {
-        this.deliveryRecordRepository = deliveryRecordRepository;
-        this.contractRepository = contractRepository;
+    public BreachRuleServiceImpl(BreachRuleRepository breachRuleRepository) {
+        this.breachRuleRepository = breachRuleRepository;
     }
 
     @Override
-    public DeliveryRecord createDeliveryRecord(DeliveryRecord record) {
+    public BreachRule createRule(BreachRule rule) {
 
-        if (record.getDeliveryDate().isAfter(LocalDate.now())) {
-            throw new BadRequestException("future delivery date not allowed");
+        if (rule.getPenaltyPerDay() == null ||
+                rule.getPenaltyPerDay().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new BadRequestException("penalty must be positive");
         }
 
-        Contract contract = contractRepository.findById(record.getContract().getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Contract not found"));
+        if (rule.getMaxPenaltyPercentage() < 0 ||
+                rule.getMaxPenaltyPercentage() > 100) {
+            throw new BadRequestException("percentage out of bounds");
+        }
 
-        record.setContract(contract);
-        return deliveryRecordRepository.save(record);
+        breachRuleRepository.findByRuleName(rule.getRuleName())
+                .ifPresent(r -> {
+                    throw new BadRequestException("rule already exists");
+                });
+
+        return breachRuleRepository.save(rule);
     }
 
     @Override
-    public DeliveryRecord getRecordById(Long id) {
-        return deliveryRecordRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Delivery record not found"));
+    public List<BreachRule> getAllRules() {
+        return breachRuleRepository.findAll();
     }
 
+    // ✅ MISSING METHOD — FIXED
     @Override
-    public List<DeliveryRecord> getDeliveryRecordsForContract(Long contractId) {
-        return deliveryRecordRepository.findByContractIdOrderByDeliveryDateAsc(contractId);
-    }
+    public void deactivateRule(Long id) {
 
-    @Override
-    public DeliveryRecord getLatestDeliveryRecord(Long contractId) {
-        return deliveryRecordRepository
-                .findFirstByContractIdOrderByDeliveryDateDesc(contractId)
-                .orElseThrow(() -> new ResourceNotFoundException("No delivery records found"));
+        BreachRule rule = breachRuleRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Rule not found"));
+
+        rule.setActive(false);
+        breachRuleRepository.save(rule);
     }
 }
