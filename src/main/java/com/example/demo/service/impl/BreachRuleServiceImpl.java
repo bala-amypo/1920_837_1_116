@@ -21,18 +21,29 @@ public class BreachRuleServiceImpl implements BreachRuleService {
 
     @Override
     public BreachRule updateRule(Long id, BreachRule rule) {
+        rule.setId(id);
         return breachRuleRepository.save(rule);
     }
 
     @Override
     public void deactivateRule(Long id) {
-        breachRuleRepository.findById(id);
+        breachRuleRepository.findById(id).ifPresent(rule -> {
+            rule.setActive(false);
+            breachRuleRepository.save(rule);
+        });
     }
 
     @Override
     public BreachRule getActiveDefaultOrFirst() {
-        return breachRuleRepository.findAll().stream().findFirst().orElse(null);
+        return breachRuleRepository.findAll()
+                .stream()
+                .findFirst()
+                .orElse(null);
+    }
+
+    // ✅ THIS WAS MISSING
+    @Override
+    public List<BreachRule> getAllRules() {
+        return breachRuleRepository.findAll();
     }
 }
-
-
