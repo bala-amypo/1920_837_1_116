@@ -9,6 +9,7 @@ import com.example.demo.repository.ContractRepository;
 import com.example.demo.repository.PenaltyCalculationRepository;
 import com.example.demo.service.BreachReportService;
 
+import java.util.Comparator;
 import java.util.List;
 
 public class BreachReportServiceImpl implements BreachReportService {
@@ -17,11 +18,11 @@ public class BreachReportServiceImpl implements BreachReportService {
     private PenaltyCalculationRepository penaltyCalculationRepository;
     private ContractRepository contractRepository;
 
-    // ✅ Required by TestNG (no-arg constructor)
+    // Required by TestNG
     public BreachReportServiceImpl() {
     }
 
-    // ✅ Required by Spring
+    // Required by Spring
     public BreachReportServiceImpl(BreachReportRepository breachReportRepository,
                                    PenaltyCalculationRepository penaltyCalculationRepository,
                                    ContractRepository contractRepository) {
@@ -36,14 +37,24 @@ public class BreachReportServiceImpl implements BreachReportService {
         Contract contract = contractRepository.findById(contractId)
                 .orElseThrow(() -> new ResourceNotFoundException("Contract not found"));
 
-        PenaltyCalculation calculation = penaltyCalculationRepository
-                .findTopByContractIdOrderByIdDesc(contractId)
+        List<PenaltyCalculation> calculations =
+                penaltyCalculationRepository.findByContractId(contractId);
+
+        if (calculations == null || calculations.isEmpty()) {
+            throw new ResourceNotFoundException("No penalty calculation");
+        }
+
+        // Get latest calculation safely
+        PenaltyCalculation latestCalculation = calculations.stream()
+                .max(Comparator.comparing(PenaltyCalculation::getId))
                 .orElseThrow(() -> new ResourceNotFoundException("No penalty calculation"));
 
         BreachReport report = BreachReport.builder()
                 .contract(contract)
-                .daysDelayed(calculation.getDaysDelayed())
-                .penaltyAmount(calculation.getCalculatedPenalty().doubleValue()) // ✅ FIX
+                .daysDelayed(latestCalculation.getDaysDelayed())
+                .penaltyAmount(
+                        latestCalculation.getCalculatedPenalty().doubleValue()
+                )
                 .build();
 
         return breachReportRepository.save(report);
