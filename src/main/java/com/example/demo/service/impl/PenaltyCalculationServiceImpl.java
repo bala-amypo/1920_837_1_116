@@ -23,7 +23,6 @@ public class PenaltyCalculationServiceImpl implements PenaltyCalculationService 
     private final DeliveryRecordRepository deliveryRecordRepository;
     private final BreachRuleRepository breachRuleRepository;
 
-    // Required by Spring
     public PenaltyCalculationServiceImpl(
             PenaltyCalculationRepository penaltyCalculationRepository,
             ContractRepository contractRepository,
@@ -34,14 +33,6 @@ public class PenaltyCalculationServiceImpl implements PenaltyCalculationService 
         this.contractRepository = contractRepository;
         this.deliveryRecordRepository = deliveryRecordRepository;
         this.breachRuleRepository = breachRuleRepository;
-    }
-
-    // Optional no-arg constructor (safe)
-    public PenaltyCalculationServiceImpl() {
-        this.penaltyCalculationRepository = null;
-        this.contractRepository = null;
-        this.deliveryRecordRepository = null;
-        this.breachRuleRepository = null;
     }
 
     @Override
