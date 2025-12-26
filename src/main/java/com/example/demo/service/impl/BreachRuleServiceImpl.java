@@ -1,9 +1,8 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.DeliveryRecord;
-import com.example.demo.repository.ContractRepository;
-import com.example.demo.repository.DeliveryRecordRepository;
-import com.example.demo.service.DeliveryRecordService;
+import com.example.demo.entity.BreachRule;
+import com.example.demo.repository.BreachRuleRepository;
+import com.example.demo.service.BreachRuleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,21 +10,17 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class DeliveryRecordServiceImpl implements DeliveryRecordService {
+public class BreachRuleServiceImpl implements BreachRuleService {
 
-    private final DeliveryRecordRepository deliveryRecordRepository;
-    private final ContractRepository contractRepository;
+    private final BreachRuleRepository breachRuleRepository;
 
     @Override
-    public DeliveryRecord getLatestDeliveryRecord(Long contractId) {
-        return deliveryRecordRepository.findAll()
-                .stream()
-                .findFirst()
-                .orElse(null);
+    public List<BreachRule> getAllRules() {
+        return breachRuleRepository.findAll();
     }
 
     @Override
-    public List<DeliveryRecord> getDeliveryRecordsForContract(Long contractId) {
-        return deliveryRecordRepository.findAll();
+    public void deactivateRule(Long ruleId) {
+        breachRuleRepository.findById(ruleId);
     }
 }

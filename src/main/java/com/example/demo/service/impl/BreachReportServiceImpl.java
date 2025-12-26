@@ -27,4 +27,9 @@ public class BreachReportServiceImpl implements BreachReportService {
     public List<BreachReport> getReportsForContract(Long contractId) {
         return breachReportRepository.findAll();
     }
+
+    @Override
+    public BreachReport getReportById(Long reportId) {
+        return breachReportRepository.findById(reportId).orElse(null);
+    }
 }

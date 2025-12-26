@@ -17,12 +17,17 @@ public class ContractServiceImpl implements ContractService {
     private final DeliveryRecordRepository deliveryRecordRepository;
 
     @Override
-    public void updateContractStatus(Long contractId) {
-        contractRepository.findById(contractId);
+    public List<Contract> getAllContracts() {
+        return contractRepository.findAll();
     }
 
     @Override
-    public List<Contract> getAllContracts() {
-        return contractRepository.findAll();
+    public Contract getContractById(Long contractId) {
+        return contractRepository.findById(contractId).orElse(null);
+    }
+
+    @Override
+    public void updateContractStatus(Long contractId) {
+        contractRepository.findById(contractId);
     }
 }
