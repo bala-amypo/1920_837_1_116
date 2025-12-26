@@ -22,4 +22,7 @@ public class PenaltyCalculation {
 
     @ManyToOne
     private Contract contract;
+
+    @ManyToOne
+    private DeliveryRecord deliveryRecord;
 }

@@ -15,5 +15,9 @@ public class BreachReport {
     private Long id;
 
     private long daysDelayed;
+
     private double penaltyAmount;
+
+    @ManyToOne
+    private Contract contract;
 }

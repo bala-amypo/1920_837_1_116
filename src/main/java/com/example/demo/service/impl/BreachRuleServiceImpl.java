@@ -48,7 +48,14 @@ public class BreachRuleServiceImpl implements BreachRuleService {
         return breachRuleRepository.findAll();
     }
 
-    // ✅ MISSING METHOD — FIXED
+    // ✅ MISSING METHOD — NOW IMPLEMENTED
+    @Override
+    public BreachRule getActiveDefaultOrFirst() {
+        return breachRuleRepository
+                .findFirstByActiveTrueOrderByIsDefaultRuleDesc()
+                .orElseThrow(() -> new ResourceNotFoundException("No active breach rule"));
+    }
+
     @Override
     public void deactivateRule(Long id) {
 
