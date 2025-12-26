@@ -10,9 +10,6 @@ import com.example.demo.service.AuthService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.Set;
-import org.springframework.stereotype.Service;
-
-@Service
 
 public class AuthServiceImpl implements AuthService {
 

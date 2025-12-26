@@ -61,7 +61,7 @@ public class PenaltyCalculationServiceImpl implements PenaltyCalculationService 
             penalty = maxPenalty;
         }
 
-        PenaltyCalculation calc = PenaltyCalculation.builder()
+        PenaltyCalculation calculation = PenaltyCalculation.builder()
                 .contract(contract)
                 .deliveryRecord(record)
                 .breachRule(rule)
@@ -69,7 +69,7 @@ public class PenaltyCalculationServiceImpl implements PenaltyCalculationService 
                 .calculatedPenalty(penalty)
                 .build();
 
-        return penaltyCalculationRepository.save(calc);
+        return penaltyCalculationRepository.save(calculation);
     }
 
     @Override
