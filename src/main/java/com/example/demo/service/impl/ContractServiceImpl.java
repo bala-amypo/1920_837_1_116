@@ -1,33 +1,36 @@
+package com.example.demo.service.impl;
+
+import com.example.demo.entity.Contract;
+import com.example.demo.repository.ContractRepository;
+import com.example.demo.service.ContractService;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
 @Service
 public class ContractServiceImpl implements ContractService {
 
-    private ContractRepository contractRepository;
+    private final ContractRepository repository;
 
-    // REQUIRED by tests
-    public ContractServiceImpl() {
-    }
-
-    // OPTIONAL for Spring
-    public ContractServiceImpl(ContractRepository contractRepository) {
-        this.contractRepository = contractRepository;
+    public ContractServiceImpl(ContractRepository repository) {
+        this.repository = repository;
     }
 
     @Override
     public Contract createContract(Contract contract) {
-
-        if (contract.getBaseContractValue() == null ||
-            contract.getBaseContractValue().compareTo(BigDecimal.ZERO) <= 0) {
-            throw new BadRequestException("Invalid contract value");
-        }
-
-        return contractRepository.save(contract);
+        return repository.save(contract);
     }
 
     @Override
-    public void updateContractStatus(Long id) {
-        Contract c = contractRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Not found"));
-        c.setStatus("COMPLETED");
-        contractRepository.save(c);
+    public List<Contract> getAllContracts() {
+        return repository.findAll();
+    }
+
+    @Override
+    public Contract updateContractStatus(Long id) {
+        Contract c = repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Contract not found"));
+        c.setActive(false);
+        return repository.save(c);
     }
 }

@@ -1,17 +1,26 @@
-import java.math.BigDecimal;
+package com.example.demo.entity;
+
+import jakarta.persistence.*;
+import java.time.LocalDate;
+import lombok.*;
 
 @Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
 public class Contract {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private BigDecimal baseContractValue;
+    private String contractName;
 
-    private LocalDate agreedDeliveryDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
 
-    private String status;
+    private Double contractValue;
 
-    // getters and setters
+    private Boolean active = true;
 }
