@@ -3,7 +3,11 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 @Entity
+@Table(name = "breach_reports")
 @Data
 @Builder
 @NoArgsConstructor
@@ -14,12 +18,23 @@ public class BreachReport {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // ✅ TEST EXPECTS int
-    private int daysDelayed;
-
-    // ✅ TEST EXPECTS double
-    private double penaltyAmount;
-
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Contract contract;
+
+    @Column(nullable = false)
+    private Integer daysDelayed;
+
+    @Column(nullable = false)
+    private BigDecimal penaltyAmount;
+
+    @Builder.Default
+    private String reportStatus = "GENERATED";
+
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime generatedAt;
+
+    @PrePersist
+    public void onGenerate() {
+        this.generatedAt = LocalDateTime.now();
+    }
 }

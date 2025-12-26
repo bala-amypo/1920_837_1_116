@@ -1,22 +1,33 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import lombok.*;
+
+import java.util.Set;
 
 @Entity
+@Table(name = "users")
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
-  @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Long id;
-  private String email;
-  private String password;
-  private String roles; // CSV
 
-  public User() {}
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-  public Long getId() { return id; }
-  public String getEmail() { return email; }
-  public void setEmail(String e) { this.email = e; }
-  public String getPassword() { return password; }
-  public void setPassword(String p) { this.password = p; }
-  public String getRoles() { return roles; }
-  public void setRoles(String r) { this.roles = r; }
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column(nullable = false)
+    private String password;
+
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"))
+    @Column(name = "role")
+    private Set<String> roles;
+
+    @Builder.Default
+    private Boolean active = true;
 }
