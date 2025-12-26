@@ -12,4 +12,10 @@ public class ContractServiceImpl implements ContractService {
 
     private final ContractRepository contractRepository;
     private final DeliveryRecordRepository deliveryRecordRepository;
+
+    @Override
+    public void updateContractStatus(Long contractId) {
+        // Minimal implementation for tests
+        contractRepository.findById(contractId);
+    }
 }

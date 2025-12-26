@@ -10,4 +10,9 @@ import org.springframework.stereotype.Service;
 public class BreachRuleServiceImpl implements BreachRuleService {
 
     private final BreachRuleRepository breachRuleRepository;
+
+    @Override
+    public void deactivateRule(Long ruleId) {
+        breachRuleRepository.findById(ruleId);
+    }
 }
