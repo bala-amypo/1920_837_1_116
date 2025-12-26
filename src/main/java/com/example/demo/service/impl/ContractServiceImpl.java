@@ -12,9 +12,9 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class ContractServiceImpl implements ContractService {
-
     private final ContractRepository contractRepository;
     private final DeliveryRecordRepository deliveryRecordRepository;
+    
 
     @Override
     public List<Contract> getAllContracts() {
