@@ -33,4 +33,9 @@ public class DeliveryRecordServiceImpl implements DeliveryRecordService {
     public DeliveryRecord getRecordById(Long recordId) {
         return deliveryRecordRepository.findById(recordId).orElse(null);
     }
+    @Override
+public DeliveryRecord createDeliveryRecord(DeliveryRecord record) {
+    return deliveryRecordRepository.save(record);
+}
+
 }

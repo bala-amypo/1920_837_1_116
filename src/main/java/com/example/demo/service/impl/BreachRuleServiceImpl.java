@@ -31,4 +31,9 @@ public class BreachRuleServiceImpl implements BreachRuleService {
                 .findFirst()
                 .orElse(null);
     }
+    @Override
+public BreachRule updateRule(Long id, BreachRule rule) {
+    return breachRuleRepository.save(rule);
+}
+
 }
