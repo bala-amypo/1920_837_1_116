@@ -1,26 +1,29 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.*;
+import com.example.demo.entity.BreachRule;
+import com.example.demo.entity.Contract;
+import com.example.demo.entity.DeliveryRecord;
+import com.example.demo.entity.PenaltyCalculation;
 import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.repository.*;
+import com.example.demo.repository.BreachRuleRepository;
+import com.example.demo.repository.ContractRepository;
+import com.example.demo.repository.DeliveryRecordRepository;
+import com.example.demo.repository.PenaltyCalculationRepository;
 import com.example.demo.service.PenaltyCalculationService;
-
-import java.math.BigDecimal;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
 import org.springframework.stereotype.Service;
 
-@Service
+import java.time.temporal.ChronoUnit;
+import java.util.List;
 
+@Service
 public class PenaltyCalculationServiceImpl implements PenaltyCalculationService {
 
-    private PenaltyCalculationRepository penaltyCalculationRepository;
-    private ContractRepository contractRepository;
-    private DeliveryRecordRepository deliveryRecordRepository;
-    private BreachRuleRepository breachRuleRepository;
+    private final PenaltyCalculationRepository penaltyCalculationRepository;
+    private final ContractRepository contractRepository;
+    private final DeliveryRecordRepository deliveryRecordRepository;
+    private final BreachRuleRepository breachRuleRepository;
 
-    public PenaltyCalculationServiceImpl() {}
-
+    // Required by Spring
     public PenaltyCalculationServiceImpl(
             PenaltyCalculationRepository penaltyCalculationRepository,
             ContractRepository contractRepository,
@@ -33,6 +36,14 @@ public class PenaltyCalculationServiceImpl implements PenaltyCalculationService 
         this.breachRuleRepository = breachRuleRepository;
     }
 
+    // Optional no-arg constructor (safe)
+    public PenaltyCalculationServiceImpl() {
+        this.penaltyCalculationRepository = null;
+        this.contractRepository = null;
+        this.deliveryRecordRepository = null;
+        this.breachRuleRepository = null;
+    }
+
     @Override
     public PenaltyCalculation calculatePenalty(Long contractId) {
 
@@ -41,27 +52,26 @@ public class PenaltyCalculationServiceImpl implements PenaltyCalculationService 
 
         DeliveryRecord record = deliveryRecordRepository
                 .findFirstByContractIdOrderByDeliveryDateDesc(contractId)
-                .orElseThrow(() -> new ResourceNotFoundException("No delivery record"));
+                .orElseThrow(() -> new ResourceNotFoundException("Delivery record not found"));
 
         BreachRule rule = breachRuleRepository
                 .findFirstByActiveTrueOrderByIsDefaultRuleDesc()
-                .orElseThrow(() -> new ResourceNotFoundException("No active breach rule"));
+                .orElseThrow(() -> new ResourceNotFoundException("Breach rule not found"));
 
-        long days = ChronoUnit.DAYS.between(
+        long delayedDaysLong = ChronoUnit.DAYS.between(
                 contract.getAgreedDeliveryDate(),
-                record.getDeliveryDate());
+                record.getDeliveryDate()
+        );
 
-        int daysDelayed = Math.max(0, (int) days);
+        int daysDelayed = delayedDaysLong > 0 ? (int) delayedDaysLong : 0;
 
-        double penalty = rule.getPenaltyPerDay()
-                .multiply(double.valueOf(daysDelayed));
+        double penalty = daysDelayed * rule.getPenaltyPerDay();
 
-        double maxPenalty =
-                contract.getBaseContractValue()
-                        .multiply(BigDecimal.valueOf(rule.getMaxPenaltyPercentage() / 100));
+        double maxAllowedPenalty =
+                (contract.getBaseContractValue() * rule.getMaxPenaltyPercentage()) / 100.0;
 
-        if (penalty.compareTo(maxPenalty) > 0) {
-            penalty = maxPenalty;
+        if (penalty > maxAllowedPenalty) {
+            penalty = maxAllowedPenalty;
         }
 
         PenaltyCalculation calculation = PenaltyCalculation.builder()
@@ -73,12 +83,6 @@ public class PenaltyCalculationServiceImpl implements PenaltyCalculationService 
                 .build();
 
         return penaltyCalculationRepository.save(calculation);
-    }
-
-    @Override
-    public PenaltyCalculation getCalculationById(Long id) {
-        return penaltyCalculationRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Calculation not found"));
     }
 
     @Override
