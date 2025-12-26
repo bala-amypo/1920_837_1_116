@@ -8,4 +8,7 @@ public interface PenaltyCalculationService {
     PenaltyCalculation calculatePenalty(Long contractId);
 
     List<PenaltyCalculation> getCalculationsForContract(Long contractId);
+
+    // ✅ REQUIRED BY CONTROLLER
+    PenaltyCalculation getCalculationById(Long id);
 }

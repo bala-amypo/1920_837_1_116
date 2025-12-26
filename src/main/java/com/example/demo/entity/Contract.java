@@ -23,7 +23,7 @@ public class Contract {
 
     private LocalDate agreedDeliveryDate;
 
-    private BigDecimal baseContractValue;
+    private double baseContractValue;
 
     private String status;
 }
