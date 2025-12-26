@@ -4,26 +4,40 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
-@Getter
-@Setter
+@Table(name = "penalty_calculations")
+@Data
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class PenaltyCalculation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
     private Contract contract;
 
-    private int daysDelayed;
+    @ManyToOne
+    private DeliveryRecord deliveryRecord;
 
+    @ManyToOne(optional = false)
+    private BreachRule breachRule;
+
+    @Column(nullable = false)
+    private Integer daysDelayed;
+
+    @Column(nullable = false)
     private BigDecimal calculatedPenalty;
 
-    private LocalDate calculatedDate;
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime calculatedAt;
+
+    @PrePersist
+    public void onCalculate() {
+        this.calculatedAt = LocalDateTime.now();
+    }
 }
