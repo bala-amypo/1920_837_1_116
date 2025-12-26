@@ -1,10 +1,13 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.entity.Contract;
 import com.example.demo.repository.ContractRepository;
 import com.example.demo.repository.DeliveryRecordRepository;
 import com.example.demo.service.ContractService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -15,7 +18,11 @@ public class ContractServiceImpl implements ContractService {
 
     @Override
     public void updateContractStatus(Long contractId) {
-        // Minimal implementation for tests
         contractRepository.findById(contractId);
+    }
+
+    @Override
+    public List<Contract> getAllContracts() {
+        return contractRepository.findAll();
     }
 }

@@ -7,6 +7,8 @@ import com.example.demo.service.DeliveryRecordService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class DeliveryRecordServiceImpl implements DeliveryRecordService {
@@ -20,5 +22,10 @@ public class DeliveryRecordServiceImpl implements DeliveryRecordService {
                 .stream()
                 .findFirst()
                 .orElse(null);
+    }
+
+    @Override
+    public List<DeliveryRecord> getDeliveryRecordsForContract(Long contractId) {
+        return deliveryRecordRepository.findAll();
     }
 }

@@ -1,7 +1,9 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.PenaltyCalculation;
-import com.example.demo.repository.*;
+import com.example.demo.repository.ContractRepository;
+import com.example.demo.repository.DeliveryRecordRepository;
+import com.example.demo.repository.PenaltyCalculationRepository;
 import com.example.demo.service.PenaltyCalculationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,5 +21,10 @@ public class PenaltyCalculationServiceImpl implements PenaltyCalculationService 
     @Override
     public List<PenaltyCalculation> getCalculationsForContract(Long contractId) {
         return penaltyCalculationRepository.findAll();
+    }
+
+    @Override
+    public PenaltyCalculation getCalculationById(Long calculationId) {
+        return penaltyCalculationRepository.findById(calculationId).orElse(null);
     }
 }

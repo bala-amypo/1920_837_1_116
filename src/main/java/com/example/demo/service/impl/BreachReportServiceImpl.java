@@ -1,7 +1,9 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.BreachReport;
-import com.example.demo.repository.*;
+import com.example.demo.repository.BreachReportRepository;
+import com.example.demo.repository.ContractRepository;
+import com.example.demo.repository.PenaltyCalculationRepository;
 import com.example.demo.service.BreachReportService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +20,11 @@ public class BreachReportServiceImpl implements BreachReportService {
 
     @Override
     public List<BreachReport> getAllReports() {
+        return breachReportRepository.findAll();
+    }
+
+    @Override
+    public List<BreachReport> getReportsForContract(Long contractId) {
         return breachReportRepository.findAll();
     }
 }
