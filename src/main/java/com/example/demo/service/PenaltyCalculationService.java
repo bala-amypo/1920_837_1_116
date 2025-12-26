@@ -9,6 +9,5 @@ public interface PenaltyCalculationService {
 
     List<PenaltyCalculation> getCalculationsForContract(Long contractId);
 
-    // ✅ REQUIRED BY CONTROLLER
     PenaltyCalculation getCalculationById(Long id);
 }

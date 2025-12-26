@@ -23,10 +23,19 @@ public class DeliveryRecordServiceImpl implements DeliveryRecordService {
 
     @Override
     public DeliveryRecord createDeliveryRecord(DeliveryRecord record) {
+
         if (record.getDeliveryDate().isAfter(LocalDate.now())) {
             throw new BadRequestException("Delivery date cannot be in the future");
         }
+
         return deliveryRecordRepository.save(record);
+    }
+
+    @Override
+    public DeliveryRecord getLatestDeliveryRecord(Long contractId) {
+        return deliveryRecordRepository
+                .findFirstByContractIdOrderByDeliveryDateDesc(contractId)
+                .orElseThrow(() -> new ResourceNotFoundException("No delivery record found"));
     }
 
     @Override
@@ -34,4 +43,3 @@ public class DeliveryRecordServiceImpl implements DeliveryRecordService {
         return deliveryRecordRepository.findByContractId(contractId);
     }
 }
-    

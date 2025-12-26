@@ -15,10 +15,8 @@ public class ContractServiceImpl implements ContractService {
     private ContractRepository contractRepository;
 
     // REQUIRED (tests use new ContractServiceImpl())
-    public ContractServiceImpl() {
-    }
+    public ContractServiceImpl() {}
 
-    // Spring constructor
     public ContractServiceImpl(ContractRepository contractRepository) {
         this.contractRepository = contractRepository;
     }

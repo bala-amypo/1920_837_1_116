@@ -9,9 +9,9 @@ public interface ContractService {
 
     Contract updateContract(Long id, Contract contract);
 
+    void updateContractStatus(Long contractId);
+
     Contract getContractById(Long id);
 
     List<Contract> getAllContracts();
-
-    void updateContractStatus(Long id);
 }
