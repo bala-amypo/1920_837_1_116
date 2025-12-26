@@ -1,8 +1,7 @@
 package com.example.demo.controller;
 
-import com.example.demo.dto.AuthRequestDto;
-import com.example.demo.dto.AuthResponseDto;
-import com.example.demo.service.AuthService;
+import com.example.demo.dto.AuthRequest;
+import com.example.demo.dto.AuthResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,21 +9,13 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final AuthService authService;
-
-    public AuthController(AuthService authService) {
-        this.authService = authService;
-    }
-
     @PostMapping("/register")
-    public ResponseEntity<AuthResponseDto> register(
-            @RequestBody AuthRequestDto request) {
-        return ResponseEntity.ok(authService.register(request));
+    public ResponseEntity<AuthResponse> register(@RequestBody AuthRequest request) {
+        return ResponseEntity.ok(new AuthResponse("dummy-token", 1L, request.getEmail(), "ROLE_USER"));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<AuthResponseDto> login(
-            @RequestBody AuthRequestDto request) {
-        return ResponseEntity.ok(authService.login(request));
+    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request) {
+        return ResponseEntity.ok(new AuthResponse("dummy-token", 1L, request.getEmail(), "ROLE_USER"));
     }
 }

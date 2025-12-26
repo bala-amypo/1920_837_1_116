@@ -23,14 +23,13 @@ public class ContractController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Contract> update(
-            @PathVariable Long id,
-            @RequestBody Contract contract) {
+    public ResponseEntity<Contract> update(@PathVariable Long id,
+                                           @RequestBody Contract contract) {
         return ResponseEntity.ok(contractService.updateContract(id, contract));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Contract> getById(@PathVariable Long id) {
+    public ResponseEntity<Contract> get(@PathVariable Long id) {
         return ResponseEntity.ok(contractService.getContractById(id));
     }
 

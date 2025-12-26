@@ -11,34 +11,29 @@ import java.util.List;
 @RequestMapping("/api/breach-reports")
 public class BreachReportController {
 
-    private final BreachReportService breachReportService;
+    private final BreachReportService service;
 
-    public BreachReportController(BreachReportService breachReportService) {
-        this.breachReportService = breachReportService;
+    public BreachReportController(BreachReportService service) {
+        this.service = service;
     }
 
     @PostMapping("/contract/{contractId}")
-    public ResponseEntity<BreachReport> generate(
-            @PathVariable Long contractId) {
-        return ResponseEntity.ok(
-                breachReportService.generateReport(contractId));
+    public ResponseEntity<BreachReport> generate(@PathVariable Long contractId) {
+        return ResponseEntity.ok(service.generateReport(contractId));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<BreachReport> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(
-                breachReportService.getReportById(id));
+    public ResponseEntity<BreachReport> get(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getReportById(id));
     }
 
     @GetMapping("/contract/{contractId}")
-    public ResponseEntity<List<BreachReport>> getByContract(
-            @PathVariable Long contractId) {
-        return ResponseEntity.ok(
-                breachReportService.getReportsForContract(contractId));
+    public ResponseEntity<List<BreachReport>> getAll(@PathVariable Long contractId) {
+        return ResponseEntity.ok(service.getReportsForContract(contractId));
     }
 
     @GetMapping
-    public ResponseEntity<List<BreachReport>> getAll() {
-        return ResponseEntity.ok(breachReportService.getAllReports());
+    public ResponseEntity<List<BreachReport>> getAllReports() {
+        return ResponseEntity.ok(service.getAllReports());
     }
 }

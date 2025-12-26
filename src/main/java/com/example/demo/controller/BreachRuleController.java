@@ -11,32 +11,31 @@ import java.util.List;
 @RequestMapping("/api/breach-rules")
 public class BreachRuleController {
 
-    private final BreachRuleService breachRuleService;
+    private final BreachRuleService service;
 
-    public BreachRuleController(BreachRuleService breachRuleService) {
-        this.breachRuleService = breachRuleService;
+    public BreachRuleController(BreachRuleService service) {
+        this.service = service;
     }
 
     @PostMapping
     public ResponseEntity<BreachRule> create(@RequestBody BreachRule rule) {
-        return ResponseEntity.ok(breachRuleService.createRule(rule));
+        return ResponseEntity.ok(service.createRule(rule));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<BreachRule> update(
-            @PathVariable Long id,
-            @RequestBody BreachRule rule) {
-        return ResponseEntity.ok(breachRuleService.updateRule(id, rule));
+    public ResponseEntity<BreachRule> update(@PathVariable Long id,
+                                             @RequestBody BreachRule rule) {
+        return ResponseEntity.ok(service.updateRule(id, rule));
     }
 
     @GetMapping
     public ResponseEntity<List<BreachRule>> getAll() {
-        return ResponseEntity.ok(breachRuleService.getAllRules());
+        return ResponseEntity.ok(service.getAllRules());
     }
 
     @PutMapping("/{id}/deactivate")
     public ResponseEntity<Void> deactivate(@PathVariable Long id) {
-        breachRuleService.deactivateRule(id);
+        service.deactivateRule(id);
         return ResponseEntity.ok().build();
     }
 }
