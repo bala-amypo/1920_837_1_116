@@ -4,10 +4,11 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Data
-@Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class BreachRule {
 
     @Id
@@ -15,5 +16,6 @@ public class BreachRule {
     private Long id;
 
     private String ruleName;
-    private Double penaltyPercentage;
+
+    private Boolean active;
 }

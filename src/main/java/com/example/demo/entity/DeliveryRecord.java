@@ -4,15 +4,17 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Data
-@Builder
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class DeliveryRecord {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String deliveryStatus;
+    @ManyToOne
+    private Contract contract;
 }
