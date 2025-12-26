@@ -32,4 +32,9 @@ public class BreachReportServiceImpl implements BreachReportService {
     public BreachReport getReportById(Long reportId) {
         return breachReportRepository.findById(reportId).orElse(null);
     }
+
+    @Override
+    public BreachReport generateReport(Long contractId) {
+        return BreachReport.builder().build();
+    }
 }

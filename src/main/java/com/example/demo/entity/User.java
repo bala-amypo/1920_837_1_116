@@ -26,5 +26,5 @@ public class User {
     private String role;
 
     @Column(nullable = false)
-    private boolean active;
+    private Boolean active;
 }

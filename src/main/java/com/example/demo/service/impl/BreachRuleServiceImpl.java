@@ -23,4 +23,12 @@ public class BreachRuleServiceImpl implements BreachRuleService {
     public void deactivateRule(Long ruleId) {
         breachRuleRepository.findById(ruleId);
     }
+
+    @Override
+    public BreachRule getActiveDefaultOrFirst() {
+        return breachRuleRepository.findAll()
+                .stream()
+                .findFirst()
+                .orElse(null);
+    }
 }

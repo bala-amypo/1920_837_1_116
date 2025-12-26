@@ -29,7 +29,8 @@ public class PenaltyCalculationServiceImpl implements PenaltyCalculationService 
     }
 
     @Override
-    public void calculatePenalty(Long contractId) {
-        contractRepository.findById(contractId);
+    public PenaltyCalculation calculatePenalty(Long contractId) {
+        PenaltyCalculation pc = PenaltyCalculation.builder().build();
+        return penaltyCalculationRepository.save(pc);
     }
 }
