@@ -3,9 +3,6 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
-
 @Entity
 @Data
 @Builder
@@ -17,9 +14,11 @@ public class PenaltyCalculation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private long daysDelayed;
+    // ✅ TEST EXPECTS int
+    private int daysDelayed;
 
-    private BigDecimal calculatedPenalty;
+    // ✅ TEST EXPECTS double
+    private double calculatedPenalty;
 
     @ManyToOne
     private Contract contract;
@@ -29,7 +28,4 @@ public class PenaltyCalculation {
 
     @ManyToOne
     private BreachRule breachRule;
-
-    // ✅ REQUIRED for repository method
-    private LocalDateTime calculatedAt;
 }

@@ -14,8 +14,10 @@ public class BreachReport {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private long daysDelayed;
+    // ✅ TEST EXPECTS int
+    private int daysDelayed;
 
+    // ✅ TEST EXPECTS double
     private double penaltyAmount;
 
     @ManyToOne

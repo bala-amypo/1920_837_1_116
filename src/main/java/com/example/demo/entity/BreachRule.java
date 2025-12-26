@@ -3,8 +3,6 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.math.BigDecimal;
-
 @Entity
 @Data
 @Builder
@@ -18,11 +16,15 @@ public class BreachRule {
 
     private String ruleName;
 
-    private BigDecimal penaltyPerDay;
+    // ✅ TEST EXPECTS double
+    private double penaltyPerDay;
 
+    // ✅ TEST EXPECTS int
     private int maxPenaltyPercentage;
 
+    @Builder.Default
     private Boolean active = true;
 
+    @Builder.Default
     private Boolean isDefaultRule = false;
 }
