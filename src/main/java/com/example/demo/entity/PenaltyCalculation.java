@@ -1,4 +1,6 @@
-import java.math.BigDecimal;
+package com.example.demo.entity;
+
+import jakarta.persistence.*;
 
 @Entity
 public class PenaltyCalculation {
@@ -7,9 +9,9 @@ public class PenaltyCalculation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Integer daysDelayed;
+    private int daysDelayed;
 
-    private BigDecimal calculatedPenalty;
+    private double calculatedPenalty;
 
     @ManyToOne
     private Contract contract;
@@ -20,5 +22,45 @@ public class PenaltyCalculation {
     @ManyToOne
     private BreachRule breachRule;
 
-    // getters and setters
+    public PenaltyCalculation() {}
+
+    public int getDaysDelayed() {
+        return daysDelayed;
+    }
+
+    public void setDaysDelayed(int daysDelayed) {
+        this.daysDelayed = daysDelayed;
+    }
+
+    public double getCalculatedPenalty() {
+        return calculatedPenalty;
+    }
+
+    public void setCalculatedPenalty(double calculatedPenalty) {
+        this.calculatedPenalty = calculatedPenalty;
+    }
+
+    public Contract getContract() {
+        return contract;
+    }
+
+    public void setContract(Contract contract) {
+        this.contract = contract;
+    }
+
+    public DeliveryRecord getDeliveryRecord() {
+        return deliveryRecord;
+    }
+
+    public void setDeliveryRecord(DeliveryRecord deliveryRecord) {
+        this.deliveryRecord = deliveryRecord;
+    }
+
+    public BreachRule getBreachRule() {
+        return breachRule;
+    }
+
+    public void setBreachRule(BreachRule breachRule) {
+        this.breachRule = breachRule;
+    }
 }
