@@ -1,37 +1,38 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
-
-import java.math.BigDecimal;
 
 @Entity
-@Table(
-    name = "breach_rules",
-    uniqueConstraints = @UniqueConstraint(columnNames = "ruleName")
-)
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class BreachRule {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String ruleName;
-
-    @Column(nullable = false)
-    private BigDecimal penaltyPerDay;
-
-    @Column(nullable = false)
-    private Double maxPenaltyPercentage;
-
-    @Builder.Default
+    private double penaltyPerDay;
+    private int maxPenaltyPercentage;
     private Boolean active = true;
-
-    @Builder.Default
     private Boolean isDefaultRule = false;
+
+    public BreachRule() {}
+
+    public Long getId() { return id; }
+
+    public double getPenaltyPerDay() { return penaltyPerDay; }
+    public void setPenaltyPerDay(double penaltyPerDay) {
+        this.penaltyPerDay = penaltyPerDay;
+    }
+
+    public int getMaxPenaltyPercentage() { return maxPenaltyPercentage; }
+    public void setMaxPenaltyPercentage(int maxPenaltyPercentage) {
+        this.maxPenaltyPercentage = maxPenaltyPercentage;
+    }
+
+    public Boolean getActive() { return active; }
+    public void setActive(Boolean active) { this.active = active; }
+
+    public Boolean getIsDefaultRule() { return isDefaultRule; }
+    public void setIsDefaultRule(Boolean isDefaultRule) {
+        this.isDefaultRule = isDefaultRule;
+    }
 }

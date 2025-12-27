@@ -1,60 +1,33 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
-import lombok.*;
-
-import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Entity
-@Table(
-    name = "contracts",
-    uniqueConstraints = @UniqueConstraint(columnNames = "contractNumber")
-)
-@Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class Contract {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
-    private String contractNumber;
-
-    @Column(nullable = false)
-    private String title;
-
-    @Column(nullable = false)
-    private String counterpartyName;
-
-    @Column(nullable = false)
+    private double baseContractValue;
     private LocalDate agreedDeliveryDate;
+    private String status;
 
-    @Column(nullable = false)
-    private BigDecimal baseContractValue;
+    public Contract() {}
 
-    @Column(nullable = false)
-    @Builder.Default
-    private String status = "ACTIVE";
+    public Long getId() { return id; }
 
-    @Column(nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
-    @Column(nullable = false)
-    private LocalDateTime updatedAt;
-
-    @PrePersist
-    public void onCreate() {
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
+    public double getBaseContractValue() { return baseContractValue; }
+    public void setBaseContractValue(double baseContractValue) {
+        this.baseContractValue = baseContractValue;
     }
 
-    @PreUpdate
-    public void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
+    public LocalDate getAgreedDeliveryDate() { return agreedDeliveryDate; }
+    public void setAgreedDeliveryDate(LocalDate agreedDeliveryDate) {
+        this.agreedDeliveryDate = agreedDeliveryDate;
     }
+
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 }
