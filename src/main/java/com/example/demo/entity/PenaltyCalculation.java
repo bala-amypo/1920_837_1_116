@@ -29,5 +29,3 @@ public class PenaltyCalculation {
     @ManyToOne
     private BreachRule breachRule;
 }
-
-
