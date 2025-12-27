@@ -39,4 +39,11 @@ public class DeliveryRecordServiceImpl implements DeliveryRecordService {
     public List<DeliveryRecord> getDeliveryRecordsForContract(Long contractId) {
         return repo.findByContractId(contractId);
     }
+
+    @Override
+public DeliveryRecord getRecordById(Long id) {
+    return repo.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Delivery record not found"));
+}
+
 }
