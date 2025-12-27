@@ -3,8 +3,6 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Set;
-
 @Entity
 @Data
 @Builder
@@ -20,5 +18,5 @@ public class User {
 
     private String password;
 
-    private String role; // NOT Set<String>
+    private String role; // STRING ONLY
 }
