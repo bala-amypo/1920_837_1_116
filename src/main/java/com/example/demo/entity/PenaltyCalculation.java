@@ -26,4 +26,8 @@ public class PenaltyCalculation {
 
     @ManyToOne
     private BreachRule breachRule;
+
+    private int daysDelayed;
+private BigDecimal calculatedPenalty;
+
 }
