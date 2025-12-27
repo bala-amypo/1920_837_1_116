@@ -10,6 +10,8 @@ import com.example.demo.repository.PenaltyCalculationRepository;
 import com.example.demo.service.BreachReportService;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class BreachReportServiceImpl implements BreachReportService {
 
@@ -18,12 +20,13 @@ public class BreachReportServiceImpl implements BreachReportService {
     private final PenaltyCalculationRepository penaltyCalculationRepository;
 
     public BreachReportServiceImpl(
-            BreachReportRepository b,
-            ContractRepository c,
-            PenaltyCalculationRepository p) {
-        this.breachReportRepository = b;
-        this.contractRepository = c;
-        this.penaltyCalculationRepository = p;
+            BreachReportRepository breachReportRepository,
+            ContractRepository contractRepository,
+            PenaltyCalculationRepository penaltyCalculationRepository) {
+
+        this.breachReportRepository = breachReportRepository;
+        this.contractRepository = contractRepository;
+        this.penaltyCalculationRepository = penaltyCalculationRepository;
     }
 
     @Override
@@ -32,15 +35,25 @@ public class BreachReportServiceImpl implements BreachReportService {
         Contract contract = contractRepository.findById(contractId)
                 .orElseThrow(() -> new ResourceNotFoundException("Contract not found"));
 
-        PenaltyCalculation calc =
-                penaltyCalculationRepository.findTopByContractIdOrderByIdDesc(contractId)
-                        .orElseThrow(() -> new ResourceNotFoundException("Penalty calculation not found"));
+        List<PenaltyCalculation> calculations =
+                penaltyCalculationRepository.findByContractId(contractId);
+
+        if (calculations.isEmpty()) {
+            throw new ResourceNotFoundException("Penalty calculation not found");
+        }
+
+        PenaltyCalculation latest = calculations.get(calculations.size() - 1);
 
         BreachReport report = new BreachReport();
         report.setContract(contract);
-        report.setDaysDelayed(calc.getDaysDelayed());
-        report.setPenaltyAmount(calc.getCalculatedPenalty()); // ✅ double → double
+        report.setDaysDelayed(latest.getDaysDelayed());
+        report.setPenaltyAmount(latest.getCalculatedPenalty()); // ✅ double → double
 
         return breachReportRepository.save(report);
+    }
+
+    @Override
+    public List<BreachReport> getAllReports() {
+        return breachReportRepository.findAll();
     }
 }
