@@ -50,7 +50,9 @@ public class PenaltyCalculationServiceImpl implements PenaltyCalculationService 
 
         int daysDelayed = diff > 0 ? (int) diff : 0;
 
-        double penalty = daysDelayed * rule.getPenaltyPerDay();
+        BigDecimal penalty =
+        rule.getPenaltyPerDay().multiply(BigDecimal.valueOf(days));
+
         double maxPenalty =
                 (contract.getBaseContractValue() * rule.getMaxPenaltyPercentage()) / 100.0;
 
@@ -59,6 +61,8 @@ public class PenaltyCalculationServiceImpl implements PenaltyCalculationService 
         PenaltyCalculation pc = new PenaltyCalculation();
         pc.setDaysDelayed(daysDelayed);
         pc.setCalculatedPenalty(penalty);
+        pc.setDaysDelayed(days);
+
         pc.setContract(contract);
         pc.setDeliveryRecord(record);
         pc.setBreachRule(rule);
