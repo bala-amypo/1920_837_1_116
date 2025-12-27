@@ -7,9 +7,9 @@ public interface BreachReportService {
 
     BreachReport generateReport(Long contractId);
 
-    BreachReport getReportById(Long id);
+    List<BreachReport> getAllReports();
 
     List<BreachReport> getReportsForContract(Long contractId);
 
-    List<BreachReport> getAllReports();
+    BreachReport getReportById(Long id);
 }
