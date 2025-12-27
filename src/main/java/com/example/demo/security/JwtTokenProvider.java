@@ -5,13 +5,15 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
 public class JwtTokenProvider {
 
     private static final String SECRET =
-        "thisIsASecureJwtSecretKeyWithMoreThan256BitsLength123456";
+            "thisIsASecureJwtSecretKeyWithMoreThan256BitsLength123456";
 
     private Key getKey() {
         return Keys.hmacShaKeyFor(SECRET.getBytes());
@@ -33,7 +35,7 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    private Claims claims(String token) {
+    private Claims getClaims(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getKey())
                 .build()
@@ -41,15 +43,24 @@ public class JwtTokenProvider {
                 .getBody();
     }
 
+    public boolean validateToken(String token) {
+        try {
+            getClaims(token);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public Long getUserId(String token) {
-        return ((Number) claims(token).get("userId")).longValue();
+        return ((Number) getClaims(token).get("userId")).longValue();
     }
 
     public String getEmail(String token) {
-        return (String) claims(token).get("email");
+        return (String) getClaims(token).get("email");
     }
 
     public String getRoles(String token) {
-        return (String) claims(token).get("roles");
+        return (String) getClaims(token).get("roles");
     }
 }
