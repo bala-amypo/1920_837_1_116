@@ -65,4 +65,10 @@ public class BreachReportServiceImpl implements BreachReportService {
     public List<BreachReport> getReportsForContract(Long contractId) {
         return breachReportRepository.findByContractId(contractId);
     }
+    @Override
+public BreachReport getReportById(Long id) {
+    return breachReportRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Breach report not found"));
+}
+
 }
