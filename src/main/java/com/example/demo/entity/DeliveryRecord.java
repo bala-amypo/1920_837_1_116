@@ -4,6 +4,10 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class DeliveryRecord {
 
     @Id
@@ -11,19 +15,6 @@ public class DeliveryRecord {
     private Long id;
 
     private Long contractId;
-    private LocalDate deliveryDate;
 
-    public DeliveryRecord() {}
-
-    public Long getId() { return id; }
-
-    public Long getContractId() { return contractId; }
-    public void setContractId(Long contractId) {
-        this.contractId = contractId;
-    }
-
-    public LocalDate getDeliveryDate() { return deliveryDate; }
-    public void setDeliveryDate(LocalDate deliveryDate) {
-        this.deliveryDate = deliveryDate;
-    }
+    private Integer daysDelayed;
 }
