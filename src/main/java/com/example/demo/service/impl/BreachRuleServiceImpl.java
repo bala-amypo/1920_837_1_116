@@ -22,10 +22,11 @@ public class BreachRuleServiceImpl implements BreachRuleService {
 
     @Override
     public BreachRule createRule(BreachRule rule) {
-        if (rule.getPenaltyPerDay() <= 0) {
+        if (rule.getPenaltyPerDay().compareTo(BigDecimal.ZERO) <= 0) {
             throw new BadRequestException("Penalty must be greater than zero");
         }
-        if (rule.getMaxPenaltyPercentage() < 1 || rule.getMaxPenaltyPercentage() > 100) {
+        if (rule.getMaxPenaltyPercentage().compareTo(BigDecimal.ZERO) < 0 ||
+    rule.getMaxPenaltyPercentage().compareTo(BigDecimal.valueOf(100)) > 0) {
             throw new BadRequestException("Max penalty percentage must be between 1 and 100");
         }
         return repo.save(rule);
