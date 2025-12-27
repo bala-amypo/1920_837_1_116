@@ -10,6 +10,7 @@ import com.example.demo.repository.PenaltyCalculationRepository;
 import com.example.demo.service.BreachReportService;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -47,7 +48,9 @@ public class BreachReportServiceImpl implements BreachReportService {
         BreachReport report = new BreachReport();
         report.setContract(contract);
         report.setDaysDelayed(latest.getDaysDelayed());
-        report.setPenaltyAmount(latest.getCalculatedPenalty()); // ✅ double → double
+
+        // 🔧 FIX: double → BigDecimal
+        report.setPenaltyAmount(BigDecimal.valueOf(latest.getCalculatedPenalty()));
 
         return breachReportRepository.save(report);
     }
@@ -55,5 +58,11 @@ public class BreachReportServiceImpl implements BreachReportService {
     @Override
     public List<BreachReport> getAllReports() {
         return breachReportRepository.findAll();
+    }
+
+    // 🔧 FIX: missing interface method
+    @Override
+    public List<BreachReport> getReportsForContract(Long contractId) {
+        return breachReportRepository.findByContractId(contractId);
     }
 }
