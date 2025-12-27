@@ -2,65 +2,54 @@ package com.example.demo.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.*;
-import java.util.stream.Collectors;
 
+@Component
 public class JwtTokenProvider {
 
-    private String jwtSecret;
-    private Long jwtExpirationMs;
+    private static final String SECRET =
+        "thisIsASecureJwtSecretKeyWithMoreThan256BitsLength123456";
 
-    private Key getSigningKey() {
-        return Keys.hmacShaKeyFor(jwtSecret.getBytes());
+    private Key getKey() {
+        return Keys.hmacShaKeyFor(SECRET.getBytes());
     }
 
-    public String generateToken(Long userId, String email, Set<String> roles) {
-
-        String rolesCsv = String.join(",", roles);
+    public String generateToken(Long userId, String email, String rolesCsv) {
 
         Map<String, Object> claims = new HashMap<>();
         claims.put("userId", userId);
         claims.put("email", email);
         claims.put("roles", rolesCsv);
 
-        Date now = new Date();
-        Date expiry = new Date(now.getTime() + jwtExpirationMs);
-
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(email)
-                .setIssuedAt(now)
-                .setExpiration(expiry)
-                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 3600000))
+                .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    public Claims getClaims(String token) {
+    private Claims claims(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(getSigningKey())
+                .setSigningKey(getKey())
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
     }
 
-    public String getUsername(String token) {
-        return getClaims(token).getSubject();
+    public Long getUserId(String token) {
+        return ((Number) claims(token).get("userId")).longValue();
     }
 
-    public Set<String> getRole(String token) {
-        String roles = (String) getClaims(token).get("roles");
-        return Arrays.stream(roles.split(","))
-                .collect(Collectors.toSet());
+    public String getEmail(String token) {
+        return (String) claims(token).get("email");
     }
 
-    public boolean validateToken(String token) {
-        try {
-            getClaims(token);
-            return true;
-        } catch (JwtException | IllegalArgumentException ex) {
-            return false;
-        }
+    public String getRoles(String token) {
+        return (String) claims(token).get("roles");
     }
 }
