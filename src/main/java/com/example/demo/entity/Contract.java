@@ -2,7 +2,9 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Entity
 @Data
@@ -17,7 +19,9 @@ public class Contract {
 
     private String title;
 
-    private BigDecimal contractValue;
+    private BigDecimal baseContractValue;
 
-    private Integer maxDelayDays;
+    private LocalDate agreedDeliveryDate;
+
+    private String status;
 }

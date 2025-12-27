@@ -2,6 +2,7 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.math.BigDecimal;
 
 @Entity
@@ -15,11 +16,9 @@ public class BreachRule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Integer minDelayDays;
+    private BigDecimal penaltyPerDay;
 
-    private Integer maxDelayDays;
-
-    private BigDecimal penaltyPercentage;
+    private BigDecimal maxPenaltyPercentage;
 
     private Boolean active;
 }

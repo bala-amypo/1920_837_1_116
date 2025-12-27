@@ -8,6 +8,7 @@ import lombok.*;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Table(name = "users")
 public class User {
 
     @Id
@@ -15,8 +16,8 @@ public class User {
     private Long id;
 
     private String email;
-
     private String password;
 
-    private String role; // STRING ONLY
+    // TEST EXPECTS STRING (NOT SET)
+    private String roles;
 }

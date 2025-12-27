@@ -2,6 +2,7 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
+
 import java.math.BigDecimal;
 
 @Entity
@@ -15,9 +16,14 @@ public class PenaltyCalculation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long contractId;
+    private BigDecimal penaltyAmount;
 
-    private Integer daysDelayed;
+    @ManyToOne
+    private Contract contract;
 
-    private BigDecimal calculatedPenalty;
+    @ManyToOne
+    private DeliveryRecord deliveryRecord;
+
+    @ManyToOne
+    private BreachRule breachRule;
 }
