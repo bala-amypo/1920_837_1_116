@@ -1,12 +1,10 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.Contract;
-import com.example.demo.exception.BadRequestException;
+import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.ContractRepository;
 import com.example.demo.service.ContractService;
 import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
 
 @Service
 public class ContractServiceImpl implements ContractService {
@@ -19,12 +17,16 @@ public class ContractServiceImpl implements ContractService {
 
     @Override
     public Contract createContract(Contract contract) {
-
-        if (contract.getBaseContractValue().compareTo(BigDecimal.ZERO) <= 0) {
-            throw new BadRequestException("Contract value must be positive");
-        }
-
         contract.setStatus("ACTIVE");
+        return repo.save(contract);
+    }
+
+    // ✅ MISSING METHOD
+    @Override
+    public Contract updateContractStatus(Long id) {
+        Contract contract = repo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Contract not found"));
+        contract.setStatus("COMPLETED");
         return repo.save(contract);
     }
 }
