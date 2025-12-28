@@ -6,7 +6,7 @@ import com.example.demo.repository.BreachRuleRepository;
 import com.example.demo.service.BreachRuleService;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
+import java.util.List;
 
 @Service
 public class BreachRuleServiceImpl implements BreachRuleService {
@@ -23,12 +23,17 @@ public class BreachRuleServiceImpl implements BreachRuleService {
         return repo.save(rule);
     }
 
-    // ✅ MISSING METHOD
     @Override
     public void deactivateRule(Long id) {
         BreachRule rule = repo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Rule not found"));
         rule.setActive(false);
         repo.save(rule);
+    }
+
+    // ✅ MISSING METHOD
+    @Override
+    public List<BreachRule> getAllRules() {
+        return repo.findAll();
     }
 }
