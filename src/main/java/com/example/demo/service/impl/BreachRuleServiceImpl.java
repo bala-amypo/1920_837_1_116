@@ -44,5 +44,16 @@ public BreachRule getActiveDefaultOrFirst() {
             .findFirst()
             .orElseThrow(() -> new ResourceNotFoundException("No active breach rule found"));
 }
+@Override
+public BreachRule updateRule(Long id, BreachRule updatedRule) {
 
+    BreachRule existing = repo.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Rule not found"));
+
+    existing.setPenaltyPerDay(updatedRule.getPenaltyPerDay());
+    existing.setMaxPenaltyPercentage(updatedRule.getMaxPenaltyPercentage());
+    existing.setActive(updatedRule.getActive());
+
+    return repo.save(existing);
+}
 }
