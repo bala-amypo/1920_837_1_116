@@ -3,6 +3,8 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
+
 @Entity
 @Data
 @Builder
@@ -17,4 +19,7 @@ public class DeliveryRecord {
     private Long contractId;
 
     private Integer daysDelayed;
+
+    // 🔧 REQUIRED by service
+    private LocalDate deliveryDate;
 }
