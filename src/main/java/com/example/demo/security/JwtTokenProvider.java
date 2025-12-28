@@ -1,16 +1,16 @@
 package com.example.demo.security;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
+import org.springframework.stereotype.Component;
 
+import java.util.Set;
+
+@Component
 public class JwtTokenProvider {
 
-    // 🔧 REQUIRED by AuthService
-    public String generateToken(Long id, String email, String roles) {
+    public String generateToken(Long id, String email, Set<String> roles) {
         return "dummy-token";
     }
 
-    // 🔧 REQUIRED by JwtAuthenticationFilter
     public boolean validateToken(String token) {
         return true;
     }
@@ -19,12 +19,7 @@ public class JwtTokenProvider {
         return "test@example.com";
     }
 
-    public String getRoles(String token) {
-        return "ROLE_USER";
-    }
-
-    // 🔧 REQUIRED by tests
-    public Claims getClaims(String token) {
-        return Jwts.claims();
+    public Set<String> getRoles(String token) {
+        return Set.of("ROLE_USER");
     }
 }

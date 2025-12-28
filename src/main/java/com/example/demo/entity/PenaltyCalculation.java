@@ -19,5 +19,7 @@ public class PenaltyCalculation {
     @ManyToOne
     private Contract contract;
 
-    private BigDecimal totalPenalty;
+    private int daysDelayed;
+
+    private BigDecimal calculatedPenalty;
 }

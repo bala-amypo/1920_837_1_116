@@ -3,8 +3,6 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.math.BigDecimal;
-
 @Entity
 @Data
 @Builder
@@ -19,5 +17,5 @@ public class BreachReport {
     @ManyToOne
     private Contract contract;
 
-    private BigDecimal penaltyAmount;
+    private String summary;
 }

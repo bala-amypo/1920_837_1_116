@@ -20,6 +20,6 @@ public class User {
 
     private String password;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private Set<String> roles;
 }

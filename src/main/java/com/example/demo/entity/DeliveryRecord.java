@@ -19,5 +19,5 @@ public class DeliveryRecord {
     @ManyToOne
     private Contract contract;
 
-    private LocalDate actualDeliveryDate;
+    private LocalDate deliveryDate;
 }
