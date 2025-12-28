@@ -16,10 +16,8 @@ public class DeliveryRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long contractId;
+    @ManyToOne
+    private Contract contract;
 
-    private Integer daysDelayed;
-
-    // 🔧 REQUIRED by service
-    private LocalDate deliveryDate;
+    private LocalDate actualDeliveryDate;
 }

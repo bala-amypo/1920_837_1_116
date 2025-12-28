@@ -18,11 +18,5 @@ public class BreachRule {
 
     private String ruleName;
 
-    private Integer minDays;
-
-    private Integer maxDays;
-
-    private BigDecimal penaltyRate;
-
-    private Boolean active;
+    private BigDecimal penaltyPerDay;
 }

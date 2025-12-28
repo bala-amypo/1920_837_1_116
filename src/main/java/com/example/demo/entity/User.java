@@ -3,12 +3,13 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Set;
+
 @Entity
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "users")
 public class User {
 
     @Id
@@ -16,8 +17,9 @@ public class User {
     private Long id;
 
     private String email;
+
     private String password;
 
-    // TEST EXPECTS STRING (NOT SET)
-    private String roles;
+    @ElementCollection
+    private Set<String> roles;
 }

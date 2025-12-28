@@ -16,9 +16,8 @@ public class PenaltyCalculation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long contractId;
+    @ManyToOne
+    private Contract contract;
 
-    private Integer daysDelayed;
-
-    private BigDecimal calculatedPenalty;
+    private BigDecimal totalPenalty;
 }
