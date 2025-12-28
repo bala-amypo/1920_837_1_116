@@ -15,7 +15,8 @@ public class PenaltyCalculationServiceImpl implements PenaltyCalculationService 
     @Autowired
     private PenaltyCalculationRepository repository;
 
-    public PenaltyCalculationServiceImpl() {}
+    public PenaltyCalculationServiceImpl() {
+    }
 
     @Override
     public PenaltyCalculation calculatePenalty(Long contractId) {
@@ -30,5 +31,11 @@ public class PenaltyCalculationServiceImpl implements PenaltyCalculationService 
     @Override
     public List<PenaltyCalculation> getCalculationsForContract(Long contractId) {
         return repository.findAll();
+    }
+
+    // 🔧 REQUIRED by controller
+    @Override
+    public PenaltyCalculation getCalculationById(Long id) {
+        return repository.findById(id).orElse(null);
     }
 }

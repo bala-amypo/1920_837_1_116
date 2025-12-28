@@ -14,7 +14,8 @@ public class ContractServiceImpl implements ContractService {
     @Autowired
     private ContractRepository contractRepository;
 
-    public ContractServiceImpl() {}
+    public ContractServiceImpl() {
+    }
 
     @Override
     public Contract createContract(Contract contract) {
@@ -37,6 +38,19 @@ public class ContractServiceImpl implements ContractService {
         Contract c = getContractById(id);
         if (c != null) {
             c.setActive(false);
+            return contractRepository.save(c);
+        }
+        return null;
+    }
+
+    // 🔧 REQUIRED by controller
+    @Override
+    public Contract updateContract(Long id, Contract updated) {
+        Contract c = getContractById(id);
+        if (c != null) {
+            c.setContractNumber(updated.getContractNumber());
+            c.setCounterpartyName(updated.getCounterpartyName());
+            c.setValue(updated.getValue());
             return contractRepository.save(c);
         }
         return null;
