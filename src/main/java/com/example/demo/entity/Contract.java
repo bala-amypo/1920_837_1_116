@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDate;
 
 @Entity
 @Data
@@ -17,11 +16,11 @@ public class Contract {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String title;
+    private String contractNumber;
 
-    private BigDecimal baseContractValue;
+    private String counterpartyName;
 
-    private LocalDate agreedDeliveryDate;
+    private BigDecimal value;
 
-    private String status;
+    private Boolean active;
 }
