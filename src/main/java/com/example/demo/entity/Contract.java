@@ -17,11 +17,17 @@ public class Contract {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String contractNumber;
+
     private String title;
 
-    private String status;
+    private String counterpartyName;
 
     private BigDecimal baseContractValue;
 
     private LocalDate agreedDeliveryDate;
+
+    private String status;
+
+    private boolean active = true;
 }
