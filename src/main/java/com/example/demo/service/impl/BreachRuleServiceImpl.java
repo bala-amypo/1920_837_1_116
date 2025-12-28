@@ -36,4 +36,13 @@ public class BreachRuleServiceImpl implements BreachRuleService {
     public List<BreachRule> getAllRules() {
         return repo.findAll();
     }
+    @Override
+public BreachRule getActiveDefaultOrFirst() {
+    return repo.findAll()
+            .stream()
+            .filter(BreachRule::getActive)
+            .findFirst()
+            .orElseThrow(() -> new ResourceNotFoundException("No active breach rule found"));
+}
+
 }

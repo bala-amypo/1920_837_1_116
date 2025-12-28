@@ -30,4 +30,13 @@ public class PenaltyCalculationServiceImpl implements PenaltyCalculationService 
         return repo.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Calculation not found"));
     }
+
+    @Override
+public PenaltyCalculation calculatePenalty(Long contractId) {
+    return repo.findByContractId(contractId)
+            .stream()
+            .reduce((first, second) -> second) // get latest
+            .orElseThrow(() -> new ResourceNotFoundException("Penalty calculation not found"));
+}
+
 }
