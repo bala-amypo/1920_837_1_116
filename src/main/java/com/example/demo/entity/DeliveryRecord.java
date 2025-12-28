@@ -3,8 +3,6 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
-
 @Entity
 @Data
 @Builder
@@ -16,7 +14,7 @@ public class DeliveryRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private LocalDate deliveryDate;
+    private int daysDelayed; // ✅ REQUIRED BY TESTS
 
     @ManyToOne
     private Contract contract;
