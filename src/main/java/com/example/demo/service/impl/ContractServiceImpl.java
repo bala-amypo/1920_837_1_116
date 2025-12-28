@@ -1,9 +1,9 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.Contract;
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.ContractRepository;
 import com.example.demo.service.ContractService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,21 +11,20 @@ import java.util.List;
 @Service
 public class ContractServiceImpl implements ContractService {
 
-    private final ContractRepository contractRepository;
+    @Autowired
+    private ContractRepository contractRepository;
 
-    public ContractServiceImpl(ContractRepository contractRepository) {
-        this.contractRepository = contractRepository;
-    }
+    public ContractServiceImpl() {}
 
     @Override
     public Contract createContract(Contract contract) {
+        contract.setActive(true);
         return contractRepository.save(contract);
     }
 
     @Override
     public Contract getContractById(Long id) {
-        return contractRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Contract not found"));
+        return contractRepository.findById(id).orElse(null);
     }
 
     @Override
@@ -34,17 +33,12 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
-    public Contract updateContract(Long id, Contract updatedContract) {
-        Contract existing = getContractById(id);
-
-        // ONLY copy safe fields
-        existing.setTitle(updatedContract.getTitle());
-
-        return contractRepository.save(existing);
-    }
-
-    @Override
-    public void updateContractStatus(Long id) {
-        getContractById(id);
+    public Contract updateContractStatus(Long id) {
+        Contract c = getContractById(id);
+        if (c != null) {
+            c.setActive(false);
+            return contractRepository.save(c);
+        }
+        return null;
     }
 }

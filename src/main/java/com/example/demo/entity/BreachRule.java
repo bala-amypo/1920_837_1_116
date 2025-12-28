@@ -16,9 +16,13 @@ public class BreachRule {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private BigDecimal penaltyPerDay;
+    private String ruleName;
 
-    private BigDecimal maxPenaltyPercentage;
+    private Integer minDays;
+
+    private Integer maxDays;
+
+    private BigDecimal penaltyRate;
 
     private Boolean active;
 }

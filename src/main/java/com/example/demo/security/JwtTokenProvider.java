@@ -1,66 +1,11 @@
 package com.example.demo.security;
 
-import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.Keys;
-import org.springframework.stereotype.Component;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 
-import java.security.Key;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
-@Component
 public class JwtTokenProvider {
 
-    private static final String SECRET =
-            "thisIsASecureJwtSecretKeyWithMoreThan256BitsLength123456";
-
-    private Key getKey() {
-        return Keys.hmacShaKeyFor(SECRET.getBytes());
-    }
-
-    public String generateToken(Long userId, String email, String rolesCsv) {
-
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("userId", userId);
-        claims.put("email", email);
-        claims.put("roles", rolesCsv);
-
-        return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(email)
-                .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 3600000))
-                .signWith(getKey(), SignatureAlgorithm.HS256)
-                .compact();
-    }
-
-    private Claims getClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(getKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
-    }
-
-    public boolean validateToken(String token) {
-        try {
-            getClaims(token);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public Long getUserId(String token) {
-        return ((Number) getClaims(token).get("userId")).longValue();
-    }
-
-    public String getEmail(String token) {
-        return (String) getClaims(token).get("email");
-    }
-
-    public String getRoles(String token) {
-        return (String) getClaims(token).get("roles");
+    public Claims getClaims(String token) {
+        return Jwts.parser().parseClaimsJwt(token).getBody();
     }
 }

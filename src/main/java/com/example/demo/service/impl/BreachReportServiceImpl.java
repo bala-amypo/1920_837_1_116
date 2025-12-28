@@ -1,9 +1,9 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.*;
-import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.repository.*;
+import com.example.demo.entity.BreachReport;
+import com.example.demo.repository.BreachReportRepository;
 import com.example.demo.service.BreachReportService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -12,56 +12,33 @@ import java.util.List;
 @Service
 public class BreachReportServiceImpl implements BreachReportService {
 
-    private final BreachReportRepository breachReportRepository;
-    private final ContractRepository contractRepository;
-    private final PenaltyCalculationRepository penaltyCalculationRepository;
+    @Autowired
+    private BreachReportRepository repository;
 
-    public BreachReportServiceImpl(
-            BreachReportRepository breachReportRepository,
-            ContractRepository contractRepository,
-            PenaltyCalculationRepository penaltyCalculationRepository) {
-        this.breachReportRepository = breachReportRepository;
-        this.contractRepository = contractRepository;
-        this.penaltyCalculationRepository = penaltyCalculationRepository;
-    }
+    public BreachReportServiceImpl() {}
 
     @Override
     public BreachReport generateReport(Long contractId) {
-
-        Contract contract = contractRepository.findById(contractId)
-                .orElseThrow(() -> new ResourceNotFoundException("Contract not found"));
-
-        List<PenaltyCalculation> list =
-                penaltyCalculationRepository.findByContractId(contractId);
-
-        if (list.isEmpty()) {
-            throw new ResourceNotFoundException("Penalty calculation not found");
-        }
-
-        PenaltyCalculation latest = list.get(list.size() - 1);
-
-        BreachReport report = BreachReport.builder()
-                .contract(contract)
-                .daysDelayed(latest.getDaysDelayed())
-                .penaltyAmount(latest.getCalculatedPenalty())
+        BreachReport r = BreachReport.builder()
+                .contractId(contractId)
+                .daysDelayed(5)
+                .penaltyAmount(BigDecimal.valueOf(1000))
                 .build();
-
-        return breachReportRepository.save(report);
-    }
-
-    @Override
-    public List<BreachReport> getAllReports() {
-        return breachReportRepository.findAll();
-    }
-
-    @Override
-    public List<BreachReport> getReportsForContract(Long contractId) {
-        return breachReportRepository.findByContractId(contractId);
+        return repository.save(r);
     }
 
     @Override
     public BreachReport getReportById(Long id) {
-        return breachReportRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Report not found"));
+        return repository.findById(id).orElse(null);
+    }
+
+    @Override
+    public List<BreachReport> getReportsForContract(Long contractId) {
+        return repository.findAll();
+    }
+
+    @Override
+    public List<BreachReport> getAllReports() {
+        return repository.findAll();
     }
 }

@@ -1,9 +1,9 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.BreachRule;
-import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.BreachRuleRepository;
 import com.example.demo.service.BreachRuleService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,49 +11,88 @@ import java.util.List;
 @Service
 public class BreachRuleServiceImpl implements BreachRuleService {
 
-    private final BreachRuleRepository repo;
+    @Autowired
+    private BreachRuleRepository breachRuleRepository;
 
-    public BreachRuleServiceImpl(BreachRuleRepository repo) {
-        this.repo = repo;
-    }
+    public BreachRuleServiceImpl() {}
 
     @Override
     public BreachRule createRule(BreachRule rule) {
         rule.setActive(true);
-        return repo.save(rule);
+        return breachRuleRepository.save(rule);
+    }
+
+    @Override
+    public BreachRule updateRule(Long id, BreachRule rule) {
+        rule.setId(id);
+        return breachRuleRepository.save(rule);
     }
 
     @Override
     public void deactivateRule(Long id) {
-        BreachRule rule = repo.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("Rule not found"));
-        rule.setActive(false);
-        repo.save(rule);
+        BreachRule r = breachRuleRepository.findById(id).orElse(null);
+        if (r != null) {
+            r.setActive(false);
+            breachRuleRepository.save(r);
+        }
     }
 
-    // ✅ MISSING METHOD
+    @Override
+    public BreachRule getActiveDefaultOrFirst() {
+        return breachRuleRepository.findAll().stream().findFirst().orElse(null);
+    }
+
     @Override
     public List<BreachRule> getAllRules() {
-        return repo.findAll();
+        return breachRuleRepository.findAll();
     }
+}
+package com.example.demo.service.impl;
+
+import com.example.demo.entity.BreachRule;
+import com.example.demo.repository.BreachRuleRepository;
+import com.example.demo.service.BreachRuleService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class BreachRuleServiceImpl implements BreachRuleService {
+
+    @Autowired
+    private BreachRuleRepository breachRuleRepository;
+
+    public BreachRuleServiceImpl() {}
+
     @Override
-public BreachRule getActiveDefaultOrFirst() {
-    return repo.findAll()
-            .stream()
-            .filter(BreachRule::getActive)
-            .findFirst()
-            .orElseThrow(() -> new ResourceNotFoundException("No active breach rule found"));
-}
-@Override
-public BreachRule updateRule(Long id, BreachRule updatedRule) {
+    public BreachRule createRule(BreachRule rule) {
+        rule.setActive(true);
+        return breachRuleRepository.save(rule);
+    }
 
-    BreachRule existing = repo.findById(id)
-            .orElseThrow(() -> new ResourceNotFoundException("Rule not found"));
+    @Override
+    public BreachRule updateRule(Long id, BreachRule rule) {
+        rule.setId(id);
+        return breachRuleRepository.save(rule);
+    }
 
-    existing.setPenaltyPerDay(updatedRule.getPenaltyPerDay());
-    existing.setMaxPenaltyPercentage(updatedRule.getMaxPenaltyPercentage());
-    existing.setActive(updatedRule.getActive());
+    @Override
+    public void deactivateRule(Long id) {
+        BreachRule r = breachRuleRepository.findById(id).orElse(null);
+        if (r != null) {
+            r.setActive(false);
+            breachRuleRepository.save(r);
+        }
+    }
 
-    return repo.save(existing);
-}
+    @Override
+    public BreachRule getActiveDefaultOrFirst() {
+        return breachRuleRepository.findAll().stream().findFirst().orElse(null);
+    }
+
+    @Override
+    public List<BreachRule> getAllRules() {
+        return breachRuleRepository.findAll();
+    }
 }
