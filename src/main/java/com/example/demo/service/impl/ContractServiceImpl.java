@@ -1,7 +1,6 @@
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.Contract;
-import com.example.demo.exception.BadRequestException;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.ContractRepository;
 import com.example.demo.service.ContractService;
@@ -20,9 +19,6 @@ public class ContractServiceImpl implements ContractService {
 
     @Override
     public Contract createContract(Contract contract) {
-        if (contract == null) {
-            throw new BadRequestException("Contract cannot be null");
-        }
         return contractRepository.save(contract);
     }
 
@@ -41,23 +37,14 @@ public class ContractServiceImpl implements ContractService {
     public Contract updateContract(Long id, Contract updatedContract) {
         Contract existing = getContractById(id);
 
+        // ONLY copy safe fields
         existing.setTitle(updatedContract.getTitle());
-        existing.setValue(updatedContract.getValue());
-        existing.setActive(updatedContract.getActive());
 
         return contractRepository.save(existing);
     }
 
     @Override
     public void updateContractStatus(Long id) {
-        Contract contract = getContractById(id);
-        contract.setActive(false);
-        contractRepository.save(contract);
-    }
-
-    @Override
-    public void deleteContract(Long id) {
-        Contract contract = getContractById(id);
-        contractRepository.delete(contract);
+        getContractById(id);
     }
 }
