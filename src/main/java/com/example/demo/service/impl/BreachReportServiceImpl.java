@@ -3,22 +3,19 @@ package com.example.demo.service.impl;
 import com.example.demo.entity.BreachReport;
 import com.example.demo.repository.BreachReportRepository;
 import com.example.demo.service.BreachReportService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class BreachReportServiceImpl implements BreachReportService {
 
     private final BreachReportRepository repository;
 
-    public BreachReportServiceImpl(BreachReportRepository repository) {
-        this.repository = repository;
-    }
-
     @Override
     public BreachReport generateReport(Long contractId) {
-        // simple stub logic (tests only check method existence now)
         BreachReport report = new BreachReport();
         report.setContractId(contractId);
         return repository.save(report);
@@ -26,7 +23,8 @@ public class BreachReportServiceImpl implements BreachReportService {
 
     @Override
     public BreachReport getReportById(Long id) {
-        return repository.findById(id).orElse(null);
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Report not found"));
     }
 
     @Override
