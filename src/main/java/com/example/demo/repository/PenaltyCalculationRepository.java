@@ -1,14 +1,17 @@
 package com.example.demo.repository;
 
+import com.example.demo.entity.Contract;
 import com.example.demo.entity.PenaltyCalculation;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface PenaltyCalculationRepository extends JpaRepository<PenaltyCalculation, Long> {
+public interface PenaltyCalculationRepository
+        extends JpaRepository<PenaltyCalculation, Long> {
 
-    List<PenaltyCalculation> findByContractId(Long contractId);
+    List<PenaltyCalculation> findByContract(Contract contract);
 
-    Optional<PenaltyCalculation> findTopByContractIdOrderByCalculatedAtDesc(Long contractId);
+    Optional<PenaltyCalculation>
+        findTopByContractOrderByIdDesc(Contract contract);
 }
