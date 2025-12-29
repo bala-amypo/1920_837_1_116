@@ -1,14 +1,34 @@
-package com.example.demo.dto;
+package com.example.demo.controller;
 
-import lombok.Data;
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import com.example.demo.entity.PenaltyCalculation;
+import com.example.demo.service.PenaltyCalculationService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-@Data
-public class PenaltyCalculationDto {
-    private Long id;
-    private Long contractId;
-    private Integer daysDelayed;
-    private BigDecimal calculatedPenalty;
-    private LocalDateTime calculatedAt;
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/calculations")
+public class PenaltyCalculationController {
+
+    private final PenaltyCalculationService service;
+
+    public PenaltyCalculationController(PenaltyCalculationService service) {
+        this.service = service;
+    }
+
+    @PostMapping("/contract/{contractId}")
+    public ResponseEntity<PenaltyCalculation> calculate(@PathVariable Long contractId) {
+        return ResponseEntity.ok(service.calculatePenalty(contractId));
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<PenaltyCalculation> get(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getCalculationById(id));
+    }
+
+    @GetMapping("/contract/{contractId}")
+    public ResponseEntity<List<PenaltyCalculation>> getAll(@PathVariable Long contractId) {
+        return ResponseEntity.ok(service.getCalculationsForContract(contractId));
+    }
 }

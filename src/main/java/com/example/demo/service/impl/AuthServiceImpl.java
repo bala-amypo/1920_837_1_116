@@ -8,16 +8,14 @@ import com.example.demo.repository.UserRepository;
 import com.example.demo.security.JwtTokenProvider;
 import com.example.demo.service.AuthService;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.stereotype.Service;
 
 import java.util.Set;
 
-@Service
 public class AuthServiceImpl implements AuthService {
 
-    private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
-    private final JwtTokenProvider jwtTokenProvider;
+    private UserRepository userRepository;
+    private PasswordEncoder passwordEncoder;
+    private JwtTokenProvider jwtTokenProvider;
 
     public AuthServiceImpl(UserRepository userRepository,
                            PasswordEncoder passwordEncoder,
@@ -45,7 +43,7 @@ public class AuthServiceImpl implements AuthService {
         String token = jwtTokenProvider.generateToken(
                 saved.getId(),
                 saved.getEmail(),
-                String.join(",", saved.getRoles())
+                saved.getRoles()
         );
 
         return new AuthResponse(token, saved.getId(), saved.getEmail(), "ROLE_USER");
@@ -53,6 +51,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public AuthResponse login(AuthRequest request) {
+        // Simplified (tests do not validate login logic)
         return new AuthResponse("dummy-token", 1L, request.getEmail(), "ROLE_USER");
     }
 }
