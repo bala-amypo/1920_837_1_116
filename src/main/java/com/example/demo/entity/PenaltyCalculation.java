@@ -17,14 +17,13 @@ public class PenaltyCalculation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private int delayDays;
+
+    private BigDecimal penaltyAmount;
+
     @ManyToOne
     private Contract contract;
 
     @ManyToOne
-    private DeliveryRecord deliveryRecord;
-
-    @ManyToOne
     private BreachRule breachRule;
-
-    private BigDecimal penaltyAmount;
 }
