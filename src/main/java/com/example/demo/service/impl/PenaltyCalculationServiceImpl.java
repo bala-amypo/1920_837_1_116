@@ -17,6 +17,7 @@ public class PenaltyCalculationServiceImpl
     private final PenaltyCalculationRepository repo;
     private final ContractRepository contractRepo;
 
+    @Override
     public PenaltyCalculation calculatePenalty(Long contractId) {
         Contract c = contractRepo.findById(contractId).orElseThrow();
         int days = 5;
@@ -31,10 +32,12 @@ public class PenaltyCalculationServiceImpl
         );
     }
 
+    @Override
     public PenaltyCalculation getCalculationById(Long id) {
         return repo.findById(id).orElseThrow();
     }
 
+    @Override
     public List<PenaltyCalculation> getCalculationsForContract(Long contractId) {
         Contract c = contractRepo.findById(contractId).orElseThrow();
         return repo.findByContract(c);

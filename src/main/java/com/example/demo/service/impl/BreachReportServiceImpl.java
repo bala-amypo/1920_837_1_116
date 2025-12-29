@@ -1,63 +1,24 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.BreachReport;
-import com.example.demo.entity.Contract;
-import com.example.demo.entity.PenaltyCalculation;
-import com.example.demo.repository.BreachReportRepository;
-import com.example.demo.repository.ContractRepository;
-import com.example.demo.repository.PenaltyCalculationRepository;
+import com.example.demo.entity.*;
+import com.example.demo.repository.*;
 import com.example.demo.service.BreachReportService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class BreachReportServiceImpl implements BreachReportService {
 
-    private final BreachReportRepository breachReportRepository;
-    private final ContractRepository contractRepository;
-    private final PenaltyCalculationRepository penaltyCalculationRepository;
-
-    public BreachReportServiceImpl(BreachReportRepository breachReportRepository,
-                                   ContractRepository contractRepository,
-                                   PenaltyCalculationRepository penaltyCalculationRepository) {
-        this.breachReportRepository = breachReportRepository;
-        this.contractRepository = contractRepository;
-        this.penaltyCalculationRepository = penaltyCalculationRepository;
-    }
-
-    @Override
-    public BreachReport generateReport(Long contractId) {
-
-        Contract contract = contractRepository.findById(contractId)
-                .orElseThrow();
-
-        PenaltyCalculation latest = penaltyCalculationRepository
-                .findTopByContractOrderByIdDesc(contract)
-                .orElseThrow();
-
-        BreachReport report = BreachReport.builder()
-                .contract(contract)
-                .daysDelayed(latest.getDaysDelayed())
-                .totalPenalty(latest.getCalculatedPenalty())
-                .build();
-
-        return breachReportRepository.save(report);
-    }
-
-    @Override
-    public List<BreachReport> getAllReports() {
-        return breachReportRepository.findAll();
-    }
-
-    @Override
-    public BreachReport getReportById(Long id) {
-        return breachReportRepository.findById(id).orElseThrow();
-    }
+    private final BreachReportRepository breachRepo;
+    private final ContractRepository contractRepo;
+    private final PenaltyCalculationRepository penaltyRepo;
 
     @Override
     public List<BreachReport> getReportsForContract(Long contractId) {
-        Contract contract = contractRepository.findById(contractId).orElseThrow();
-        return breachReportRepository.findByContract(contract);
+        Contract contract = contractRepo.findById(contractId).orElseThrow();
+        return breachRepo.findByContract(contract);
     }
 }
