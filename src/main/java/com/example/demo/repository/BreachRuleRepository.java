@@ -7,6 +7,5 @@ import java.util.Optional;
 
 public interface BreachRuleRepository extends JpaRepository<BreachRule, Long> {
 
-    Optional<BreachRule> findByName(String name);
-
+    Optional<BreachRule> findByName(String name); // must match entity field
 }
