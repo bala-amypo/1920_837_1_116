@@ -1,49 +1,42 @@
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.Contract;
-import com.example.demo.entity.PenaltyCalculation;
-import com.example.demo.repository.ContractRepository;
-import com.example.demo.repository.PenaltyCalculationRepository;
+import com.example.demo.entity.*;
+import com.example.demo.repository.*;
 import com.example.demo.service.PenaltyCalculationService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
-public class PenaltyCalculationServiceImpl implements PenaltyCalculationService {
+@RequiredArgsConstructor
+public class PenaltyCalculationServiceImpl
+        implements PenaltyCalculationService {
 
-    private final PenaltyCalculationRepository penaltyCalculationRepository;
-    private final ContractRepository contractRepository;
+    private final PenaltyCalculationRepository repo;
+    private final ContractRepository contractRepo;
 
-    public PenaltyCalculationServiceImpl(
-            PenaltyCalculationRepository penaltyCalculationRepository,
-            ContractRepository contractRepository
-    ) {
-        this.penaltyCalculationRepository = penaltyCalculationRepository;
-        this.contractRepository = contractRepository;
-    }
-
-    @Override
     public PenaltyCalculation calculatePenalty(Long contractId) {
+        Contract c = contractRepo.findById(contractId).orElseThrow();
+        int days = 5;
+        BigDecimal penalty = BigDecimal.valueOf(days * 100);
 
-        Contract contract = contractRepository.findById(contractId)
-                .orElseThrow();
-
-        PenaltyCalculation calculation = PenaltyCalculation.builder()
-                .contract(contract)
-                .daysDelayed(5)
-                .calculatedPenalty(contract.getBaseContractValue())
-                .build();
-
-        return penaltyCalculationRepository.save(calculation);
+        return repo.save(
+            PenaltyCalculation.builder()
+                .contract(c)
+                .daysDelayed(days)
+                .totalPenalty(penalty)
+                .build()
+        );
     }
 
-    @Override
+    public PenaltyCalculation getCalculationById(Long id) {
+        return repo.findById(id).orElseThrow();
+    }
+
     public List<PenaltyCalculation> getCalculationsForContract(Long contractId) {
-
-        Contract contract = contractRepository.findById(contractId)
-                .orElseThrow();
-
-        return penaltyCalculationRepository.findByContract(contract);
+        Contract c = contractRepo.findById(contractId).orElseThrow();
+        return repo.findByContract(c);
     }
 }

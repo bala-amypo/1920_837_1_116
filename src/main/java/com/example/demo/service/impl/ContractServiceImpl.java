@@ -3,38 +3,30 @@ package com.example.demo.service.impl;
 import com.example.demo.entity.Contract;
 import com.example.demo.repository.ContractRepository;
 import com.example.demo.service.ContractService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service
+@RequiredArgsConstructor
 public class ContractServiceImpl implements ContractService {
 
-    private final ContractRepository contractRepository;
+    private final ContractRepository repo;
 
-    public ContractServiceImpl(ContractRepository contractRepository) {
-        this.contractRepository = contractRepository;
-    }
-
-    @Override
     public Contract createContract(Contract contract) {
-        return contractRepository.save(contract);
+        return repo.save(contract);
     }
 
-    @Override
-    public Contract updateContractStatus(Long id) {
-        Contract contract = contractRepository.findById(id).orElseThrow();
-        contract.setStatus("UPDATED");
-        return contractRepository.save(contract);
+    public Contract updateContract(Long id, Contract updated) {
+        Contract c = repo.findById(id).orElseThrow();
+        c.setTitle(updated.getTitle());
+        c.setBaseContractValue(updated.getBaseContractValue());
+        c.setStatus(updated.getStatus());
+        return repo.save(c);
     }
 
-    @Override
-    public List<Contract> getAllContracts() {
-        return contractRepository.findAll();
-    }
-
-    @Override
-    public Contract getContractById(Long id) {
-        return contractRepository.findById(id).orElseThrow();
+    public void updateContractStatus(Long id) {
+        Contract c = repo.findById(id).orElseThrow();
+        c.setStatus("CLOSED");
+        repo.save(c);
     }
 }
