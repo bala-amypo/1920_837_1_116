@@ -1,39 +1,15 @@
-package com.example.demo.controller;
+package com.example.demo.dto;
 
-import com.example.demo.entity.BreachReport;
-import com.example.demo.service.BreachReportService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import lombok.Data;
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
-import java.util.List;
-
-@RestController
-@RequestMapping("/api/breach-reports")
-public class BreachReportController {
-
-    private final BreachReportService service;
-
-    public BreachReportController(BreachReportService service) {
-        this.service = service;
-    }
-
-    @PostMapping("/contract/{contractId}")
-    public ResponseEntity<BreachReport> generate(@PathVariable Long contractId) {
-        return ResponseEntity.ok(service.generateReport(contractId));
-    }
-
-    @GetMapping("/{id}")
-    public ResponseEntity<BreachReport> get(@PathVariable Long id) {
-        return ResponseEntity.ok(service.getReportById(id));
-    }
-
-    @GetMapping("/contract/{contractId}")
-    public ResponseEntity<List<BreachReport>> getAll(@PathVariable Long contractId) {
-        return ResponseEntity.ok(service.getReportsForContract(contractId));
-    }
-
-    @GetMapping
-    public ResponseEntity<List<BreachReport>> getAllReports() {
-        return ResponseEntity.ok(service.getAllReports());
-    }
+@Data
+public class BreachReportDto {
+    private Long id;
+    private Long contractId;
+    private Integer daysDelayed;
+    private BigDecimal penaltyAmount;
+    private String reportStatus;
+    private LocalDateTime generatedAt;
 }
