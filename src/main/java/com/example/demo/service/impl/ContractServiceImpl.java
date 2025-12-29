@@ -3,7 +3,6 @@ package com.example.demo.service.impl;
 import com.example.demo.entity.Contract;
 import com.example.demo.repository.ContractRepository;
 import com.example.demo.service.ContractService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,21 +10,22 @@ import java.util.List;
 @Service
 public class ContractServiceImpl implements ContractService {
 
-    @Autowired
-    private ContractRepository contractRepository;
+    private final ContractRepository contractRepository;
 
-    public ContractServiceImpl() {
+    public ContractServiceImpl(ContractRepository contractRepository) {
+        this.contractRepository = contractRepository;
     }
 
     @Override
     public Contract createContract(Contract contract) {
-        contract.setActive(true);
         return contractRepository.save(contract);
     }
 
     @Override
-    public Contract getContractById(Long id) {
-        return contractRepository.findById(id).orElse(null);
+    public Contract updateContractStatus(Long id) {
+        Contract contract = contractRepository.findById(id).orElseThrow();
+        contract.setStatus("UPDATED");
+        return contractRepository.save(contract);
     }
 
     @Override
@@ -34,25 +34,7 @@ public class ContractServiceImpl implements ContractService {
     }
 
     @Override
-    public Contract updateContractStatus(Long id) {
-        Contract c = getContractById(id);
-        if (c != null) {
-            c.setActive(false);
-            return contractRepository.save(c);
-        }
-        return null;
-    }
-
-    // 🔧 REQUIRED by controller
-    @Override
-    public Contract updateContract(Long id, Contract updated) {
-        Contract c = getContractById(id);
-        if (c != null) {
-            c.setContractNumber(updated.getContractNumber());
-            c.setCounterpartyName(updated.getCounterpartyName());
-            c.setValue(updated.getValue());
-            return contractRepository.save(c);
-        }
-        return null;
+    public Contract getContractById(Long id) {
+        return contractRepository.findById(id).orElseThrow();
     }
 }
