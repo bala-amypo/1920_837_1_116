@@ -20,17 +20,17 @@ public class BreachReportController {
     }
 
     @GetMapping("/{id}")
-    public BreachReport getById(@PathVariable Long id) {
+    public BreachReport get(@PathVariable Long id) {
         return service.getReportById(id);
     }
 
     @GetMapping("/contract/{contractId}")
-    public List<BreachReport> byContract(@PathVariable Long contractId) {
+    public List<BreachReport> getByContract(@PathVariable Long contractId) {
         return service.getReportsForContract(contractId);
     }
 
     @GetMapping
-    public List<BreachReport> all() {
+    public List<BreachReport> getAll() {
         return service.getAllReports();
     }
 }

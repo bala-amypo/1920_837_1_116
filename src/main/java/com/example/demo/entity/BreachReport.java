@@ -3,6 +3,8 @@ package com.example.demo.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Entity
 @Getter
 @Setter
@@ -15,5 +17,8 @@ public class BreachReport {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long contractId;
+    @ManyToOne
+    private Contract contract;
+
+    private BigDecimal totalPenalty;
 }
