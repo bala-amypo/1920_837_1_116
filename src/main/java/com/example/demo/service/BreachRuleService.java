@@ -1,20 +1,17 @@
-package com.example.demo.service.impl;
+package com.example.demo.service;
 
 import com.example.demo.entity.BreachRule;
-import com.example.demo.repository.BreachRuleRepository;
-import com.example.demo.service.BreachRuleService;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import java.util.List;
 
-@Service
-@RequiredArgsConstructor
-public class BreachRuleServiceImpl implements BreachRuleService {
+public interface BreachRuleService {
 
-    private final BreachRuleRepository repository;
+    BreachRule createRule(BreachRule rule);
 
-    @Override
-    public BreachRule create(BreachRule rule) {
-        rule.setActive(true);   // ✅ works after adding field
-        return repository.save(rule);
-    }
+    BreachRule updateRule(Long id, BreachRule rule);
+
+    void deactivateRule(Long id);
+
+    BreachRule getActiveDefaultOrFirst();
+
+    List<BreachRule> getAllRules();
 }
