@@ -3,18 +3,40 @@ package com.example.demo.service.impl;
 import com.example.demo.entity.BreachRule;
 import com.example.demo.repository.BreachRuleRepository;
 import com.example.demo.service.BreachRuleService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
-@RequiredArgsConstructor
 public class BreachRuleServiceImpl implements BreachRuleService {
 
     private final BreachRuleRepository repository;
 
+    public BreachRuleServiceImpl(BreachRuleRepository repository) {
+        this.repository = repository;
+    }
+
     @Override
-    public BreachRule create(BreachRule rule) {
-        rule.setActive(true);   // ✅ works after adding field
+    public BreachRule createRule(BreachRule rule) {
+        rule.setActive(true);
         return repository.save(rule);
+    }
+
+    @Override
+    public List<BreachRule> getAllRules() {
+        return repository.findAll();
+    }
+
+    @Override
+    public BreachRule getRuleById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Rule not found"));
+    }
+
+    @Override
+    public void deactivateRule(Long id) {
+        BreachRule rule = getRuleById(id);
+        rule.setActive(false);
+        repository.save(rule);
     }
 }
