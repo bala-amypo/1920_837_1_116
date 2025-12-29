@@ -4,10 +4,8 @@ import com.example.demo.entity.BreachReport;
 import com.example.demo.repository.BreachReportRepository;
 import com.example.demo.service.BreachReportService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-
 import java.util.List;
-
+import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class BreachReportServiceImpl implements BreachReportService {
