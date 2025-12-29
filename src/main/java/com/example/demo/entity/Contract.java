@@ -2,7 +2,6 @@ package com.example.demo.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -14,20 +13,17 @@ import java.time.LocalDate;
 public class Contract {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
-    private String contractNumber;
-
     private String title;
-
+    private String contractNumber;
     private String counterpartyName;
 
     private BigDecimal baseContractValue;
 
     private LocalDate agreedDeliveryDate;
 
-    private String status;
-
-    private boolean active = true;
+    @Builder.Default
+    private String status = "ACTIVE";
 }
