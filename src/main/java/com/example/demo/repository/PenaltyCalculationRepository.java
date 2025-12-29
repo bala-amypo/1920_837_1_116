@@ -6,9 +6,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface PenaltyCalculationRepository extends JpaRepository<PenaltyCalculation, Long> {
+public interface PenaltyCalculationRepository
+        extends JpaRepository<PenaltyCalculation, Long> {
+
+    Optional<PenaltyCalculation> findTopByContractIdOrderByIdDesc(Long contractId);
 
     List<PenaltyCalculation> findByContractId(Long contractId);
-
-    Optional<PenaltyCalculation> findTopByContractIdOrderByCalculatedAtDesc(Long contractId);
 }
